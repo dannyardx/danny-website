@@ -1,0 +1,228 @@
+/* --- Main Header (Sticky) --- */
+.main-header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: var(--header-bg);
+    box-shadow: 0 0.125rem 0.625rem var(--shadow-light); /* Menggunakan rem */
+    z-index: 1000;
+    padding: 0.8rem 0; /* Sedikit lebih tinggi untuk estetika */
+    border-bottom: 1px solid var(--header-border);
+    backdrop-filter: blur(0.3125rem); /* Efek blur yang bagus */
+    /* Transisi untuk efek slide header */
+    transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, transform 0.3s ease-out;
+    transform: translateY(0); /* Posisi awal, terlihat */
+}
+
+/* Kelas yang akan ditambahkan oleh JavaScript untuk menyembunyikan header */
+.main-header.hide {
+    transform: translateY(-100%); /* Sembunyikan header ke atas */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between; /* Menyebar elemen */
+    align-items: center;
+    gap: 2rem; /* Meningkatkan jarak antar elemen untuk kelegaan visual */
+}
+
+.site-title {
+    font-size: 1.8rem; /* Sedikit lebih besar untuk logo */
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+    flex-shrink: 0;
+}
+
+.main-nav {
+    flex-grow: 1; /* Memungkinkan navigasi mengambil ruang di tengah */
+    display: flex;
+    justify-content: center; /* Memusatkan navigasi */
+    order: 2; /* Urutan di desktop */
+}
+
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 2rem; /* Jarak antar item navigasi yang lebih lapang */
+}
+
+.main-nav a {
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 0.5rem 0; /* Padding vertikal lebih baik */
+    position: relative;
+    transition: color 0.3s ease;
+    font-size: 1rem; /* Ukuran font standar */
+}
+
+.main-nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.3rem; /* Sedikit di bawah teks */
+    width: 0;
+    height: 0.15rem; /* Lebih tebal sedikit */
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.main-nav a:hover::after,
+.main-nav a.active::after { /* Tambahkan .active jika ada highlight halaman aktif */
+    width: 100%;
+}
+
+.main-nav a:hover {
+    color: var(--accent-color);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 2.8rem; /* Sedikit lebih besar */
+    height: 2.8rem; /* Sedikit lebih besar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem; /* Ikon lebih besar */
+    cursor: pointer;
+    box-shadow: 0 0.125rem 0.3125rem var(--shadow-light);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    z-index: 1001;
+    flex-shrink: 0;
+    order: 3; /* Urutan di desktop */
+}
+
+.theme-toggle:hover {
+    background-color: var(--border-color);
+    box-shadow: 0 0.2rem 0.6rem var(--shadow-medium); /* Efek shadow saat hover */
+}
+
+.theme-toggle .icon-dark {
+    display: none;
+}
+
+body.dark-mode .theme-toggle .icon-light {
+    display: none;
+}
+
+body.dark-mode .theme-toggle .icon-dark {
+    display: inline-block;
+}
+
+/* --- Hero Section (Content after sticky header) --- */
+.hero-after-header {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    color: var(--text-primary);
+    padding: 7rem 0 5rem; /* Menyesuaikan padding atas karena header 0.8rem */
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.5s ease, color 0.5s ease;
+    min-height: calc(100vh - 5rem - 0.8rem); /* Min-height dikurangi tinggi footer dan header */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-after-header .hero-content {
+    max-width: 50rem; /* Menggunakan rem */
+}
+
+.hero-after-header h1 {
+    font-size: 3.5rem; /* Menggunakan rem */
+    margin-bottom: 0.9375rem; /* Menggunakan rem */
+    letter-spacing: 0.0625rem; /* Menggunakan rem */
+
+    /* Gaya untuk efek glow */
+    color: var(--h1-color-light); /* Gunakan variabel warna H1 untuk mode terang */
+    text-shadow:
+        0 0 0.5rem var(--h1-glow-color-light), /* Blur radius 0.5rem (8px) */
+        0 0 1rem var(--h1-glow-color-light); /* Blur radius 1rem (16px) */
+    transition: color 0.5s ease, text-shadow 0.5s ease; /* Tambahkan transisi untuk glow */
+}
+
+/* Modifikasi gaya H1 untuk Dark Mode */
+body.dark-mode .hero-after-header h1 {
+    color: var(--h1-color-dark);
+    text-shadow:
+        0 0 0.5rem var(--h1-glow-color-dark),
+        0 0 1rem var(--h1-glow-color-dark);
+}
+
+/* Sections (Content) - Base Style */
+.section {
+    padding: 5rem 0; /* Menggunakan rem */
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    /* Mengembalikan ke transisi dasar, menghapus transform/opacity scroll */
+    transition: opacity 1s ease-out, transform 1s ease-out, background-color 0.5s ease, border-color 0.5s ease;
+    opacity: 1; /* Pastikan selalu terlihat secara default */
+    transform: translateY(0); /* Pastikan selalu di posisi normal secara default */
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+/* MENGHAPUS GAYA UNTUK scroll-animated-section KARENA MENYEBABKAN BLINK-BLINK */
+/* .scroll-animated-section {
+    opacity: 0;
+    transform: translateY(100vh);
+    transition: opacity 0.5s ease-out, transform 0.8s ease-out;
+}
+.scroll-animated-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.scroll-animated-section.scroll-down-hide {
+    opacity: 0;
+    transform: translateY(100vh);
+}
+.scroll-animated-section.scroll-up-hide {
+    opacity: 0;
+    transform: translateY(-100vh);
+} */
+
+
+.section h2 {
+    text-align: center;
+    font-size: 3rem; /* Menggunakan rem */
+    margin-bottom: 3.125rem; /* Menggunakan rem */
+    position: relative;
+    color: var(--text-primary);
+    letter-spacing: 0.03125rem; /* Menggunakan rem */
+}
+
+.section h2::after {
+    content: '';
+    display: block;
+    width: 5rem; /* Menggunakan rem */
+    height: 0.3125rem; /* Menggunakan rem */
+    background-color: var(--accent-color);
+    margin: 0.9375rem auto 0; /* Menggunakan rem */
+    border-radius: 0.1875rem; /* Menggunakan rem */
+    transition: background-color 0.5s ease;
+}
+
+/* --- Footer (Transparent) --- */
+.transparent-footer {
+    background-color: transparent;
+    color: var(--footer-text-color);
+    text-align: center;
+    padding: 2.5rem 0; /* Menggunakan rem */
+    font-size: 0.95rem; /* Menggunakan rem */
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.transparent-footer .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

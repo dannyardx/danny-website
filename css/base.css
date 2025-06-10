@@ -1,0 +1,83 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600&display=swap');
+
+/* Default (Light) Mode Colors */
+:root {
+    --bg-primary: #ffffff;        /* Background terang utama */
+    --bg-secondary: #f0f0f0;      /* Background terang sekunder (untuk section, form) */
+    --text-primary: #333333;      /* Warna teks gelap utama */
+    --text-secondary: #555555;    /* Warna teks gelap sekunder */
+    --accent-color: #007bff;      /* Warna aksen terang (biru cerah) */
+    --border-color: #e0e0e0;      /* Warna border ringan */
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.15);
+    --header-bg: rgba(255, 255, 255, 0.95); /* Header semi-transparan light */
+    --header-border: #e0e0e0;
+    --footer-text-color: #666666; /* Warna teks footer transparan */
+    --h1-color-light: #9471ed; /* Warna ungu terang untuk H1 di mode terang */
+    --h1-glow-color-light: rgba(148, 113, 237, 0.6); /* Warna glow ungu terang (transparan) */
+
+    /* Base font size for responsive scaling */
+    font-size: 16px; /* Default base for rem units */
+}
+
+/* Dark Mode Colors */
+body.dark-mode {
+    --bg-primary: #1a1a1a;        /* Background gelap utama */
+    --bg-secondary: #2c2c2c;      /* Background gelap sekunder */
+    --text-primary: #f0f0f0;      /* Warna teks terang utama */
+    --text-secondary: #cccccc;    /* Warna teks terang sekunder */
+    --accent-color: #88ccff;      /* Warna aksen terang (misal biru cerah untuk kontras) */
+    --border-color: #444444;      /* Warna border gelap */
+    --shadow-light: rgba(255, 255, 255, 0.08);
+    --shadow-medium: rgba(255, 255, 255, 0.15);
+    --header-bg: rgba(26, 26, 26, 0.95); /* Header semi-transparan dark */
+    --header-border: #444444;
+    --footer-text-color: #999999; /* Warna teks footer transparan (dark) */
+    --h1-color-dark: #9471ed; /* Warna ungu yang sama untuk H1 di mode gelap */
+    --h1-glow-color-dark: rgba(148, 113, 237, 0.6); /* Warna glow ungu yang sama (transparan) */
+}
+
+
+/* General Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    scroll-behavior: smooth;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.container {
+    max-width: 70rem; /* Menggunakan rem (1080px / 16px) */
+    margin: 0 auto;
+    padding: 0 1.5rem; /* Menggunakan rem */
+}
+
+h1, h2, h3 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem; /* Menggunakan rem */
+    font-weight: 700;
+    transition: color 0.5s ease;
+}
+
+p {
+    /* Base style for p, specific p elements might override this */
+    margin-bottom: 1rem; /* Menggunakan rem */
+    font-weight: 300;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+}

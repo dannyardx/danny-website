@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintenance Terjadwal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Maintenance Developing</title>
     <style>
         /* Import Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@700&display=swap');
@@ -39,7 +39,7 @@
             user-select: none;         
             /* --- Perbaikan Overflow --- */
             overflow-x: hidden; /* Pastikan tidak ada scrollbar horizontal */
-            overflow-y: auto;   /* Izinkan scroll vertikal jika konten melebihi tinggi */
+            overflow-y: hidden; /* Menonaktifkan scroll vertikal juga jika konten muat di viewport */
             position: relative; 
             box-sizing: border-box; /* Pastikan padding di elemen lain tidak menyebabkan overflow */
         }
@@ -68,39 +68,37 @@
             background-color: transparent; /* Latar belakang untuk bintang */
             
             /* ---- Metode Bintang yang Lebih Efisien (Menggunakan Background-Image) ---- */
-            /* Jauh lebih sedikit radial-gradient, ukuran lebih besar, tile lebih besar */
+            /* Partikel ini akan jauh lebih besar dan lebih jarang untuk menghindari zoom */
             background-image: 
-                radial-gradient(8px 8px at 15% 25%, white, rgba(255,255,255,0)), /* Bintang besar */
-                radial-gradient(6px 6px at 45% 75%, white, rgba(255,255,255,0)),
-                radial-gradient(10px 10px at 80% 10%, white, rgba(255,255,255,0)),
-                radial-gradient(7px 7px at 20% 90%, white, rgba(255,255,255,0)),
+                radial-gradient(10px 10px at 15% 25%, white, rgba(255,255,255,0)), /* Bintang besar */
+                radial-gradient(8px 8px at 45% 75%, white, rgba(255,255,255,0)),
+                radial-gradient(12px 12px at 80% 10%, white, rgba(255,255,255,0)),
                 
                 /* Partikel Ungu */
-                radial-gradient(8px 8px at 30% 60%, var(--glow-color-base), rgba(161,105,239,0)),
-                radial-gradient(6px 6px at 70% 40%, var(--glow-color-base), rgba(161,105,239,0)),
-                radial-gradient(10px 10px at 5% 10%, var(--glow-color-base), rgba(161,105,239,0))
+                radial-gradient(10px 10px at 30% 60%, var(--glow-color-base), rgba(161,105,239,0)),
+                radial-gradient(8px 8px at 70% 40%, var(--glow-color-base), rgba(161,105,239,0))
             ; 
-            background-size: 1500px 1500px; /* Ukuran "tile" yang sangat besar */
+            background-size: 2000px 2000px; /* Ukuran "tile" yang sangat besar (px untuk performa lebih baik) */
             background-repeat: repeat; /* Mengulang tile */
-            opacity: 0.03; /* Opacity dasar bintang, sangat sangat redup */
+            opacity: 0.05; /* Opacity dasar bintang, sangat sangat redup */
             animation: 
-                starMove 240s linear infinite, /* Pergerakan bintang sangat lambat */
+                starMove 360s linear infinite, /* Pergerakan bintang sangat lambat */
                 starTwinkle 5s ease-in-out infinite alternate; /* Kelap-kelip */
         }
 
         /* Layer bintang kedua (lebih besar, lebih sedikit, lebih lambat) */
         .particle-background::after {
             background-image: 
-                radial-gradient(10px 10px at 10% 80%, rgba(255,255,255,0.6), rgba(255,255,255,0)), 
-                radial-gradient(8px 8px at 90% 20%, rgba(255,255,255,0.6), rgba(255,255,255,0)),
-                radial-gradient(12px 12px at 50% 50%, rgba(161,105,239,0.6), rgba(161,105,239,0))
+                radial-gradient(12px 12px at 10% 80%, rgba(255,255,255,0.6), rgba(255,255,255,0)), 
+                radial-gradient(10px 10px at 90% 20%, rgba(255,255,255,0.6), rgba(255,255,255,0)),
+                radial-gradient(15px 15px at 50% 50%, rgba(161,105,239,0.6), rgba(161,105,239,0))
             ;
-            background-size: 2000px 2000px; /* Ukuran tile lebih besar lagi */
+            background-size: 3000px 3000px; /* Ukuran tile lebih besar lagi (px untuk performa) */
             animation-delay: 1s; /* Delay sedikit agar tidak sama dengan layer pertama */
-            animation-duration: 360s; /* Kecepatan lebih lambat lagi */
-            opacity: 0.02; /* Lebih redup lagi */
+            animation-duration: 540s; /* Kecepatan lebih lambat lagi */
+            opacity: 0.03; /* Lebih redup lagi */
             animation: 
-                starMove 360s linear infinite, 
+                starMove 540s linear infinite, 
                 starTwinkle 8s ease-in-out infinite alternate;
         }
 
@@ -113,7 +111,7 @@
         /* Animasi kelap-kelip bintang */
         @keyframes starTwinkle {
             0%, 100% { opacity: 0.05; } /* Sangat redup di titik teredup */
-            50% { opacity: 0.3; } /* Tidak terlalu terang di titik paling terang */
+            50% { opacity: 0.2; } /* Tidak terlalu terang di titik paling terang (lebih redup dari sebelumnya) */
         }
 
 
@@ -175,10 +173,7 @@
         }
 
 
-        /* --- Media Queries (Revisi Tambahan) --- */
-        /* Media queries menjadi lebih jarang digunakan untuk font-size/padding
-           karena clamp() sudah menghandle sebagian besar.
-           Namun, tetap penting untuk perubahan layout atau jika clamp() tidak cukup. */
+        /* --- Media Queries (Hanya penyesuaian sangat spesifik jika clamp() tidak cukup) --- */
         @media (max-width: 768px) {
             /* Tidak ada perubahan spesifik yang besar jika clamp() bekerja baik */
         }

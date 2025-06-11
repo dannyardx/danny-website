@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroSection = document.getElementById('hero-after-header');
     const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
     const sidebarToggleDesktop = document.getElementById('sidebar-toggle-desktop');
+    // const leftPanelToggle = document.getElementById('left-panel-toggle'); // HAPUS INI, diambil di dynamic-toggles-handler.js
 
     // --- Smooth Scrolling (untuk nav links) ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -17,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetElement = document.querySelector(targetId);
 
             if (targetElement) {
-                // Tutup sidebar mobile jika terbuka (hanya di mobile)
                 if (window.innerWidth <= 991 && sidebarNav && sidebarNav.classList.contains('is-open')) {
                     sidebarNav.classList.remove('is-open');
                     mainPageContent.classList.remove('dim-content');
@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }, 300);
                 } 
-                // Gulir halaman jika di desktop atau sidebar mobile tidak terbuka
                 else {
                     targetElement.scrollIntoView({
                         behavior: "smooth",
@@ -147,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
             portfolioItemDiv.classList.add('portfolio-item');
 
             const placeholderDiv = document.createElement('div');
-            placeholderDiv.classList.add('portfolio-placeholder');
             placeholderDiv.textContent = project.placeholderText;
 
             const titleH3 = document.createElement('h3');

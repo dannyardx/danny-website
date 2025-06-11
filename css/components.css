@@ -53,7 +53,7 @@ body.dark-mode .theme-toggle .icon-dark {
 
 /* Gaya untuk kursor berkedip */
 .blinking-cursor {
-    color: var(--h1-color-light); /* Warna kursor */
+    color: var(--accent-color); /* Warna kursor */
     animation: blink 0.7s infinite; /* Animasi berkedip */
     margin-left: 0.1rem; /* Sedikit jarak dari teks */
     font-weight: 300; /* Konsisten dengan p normal */
@@ -213,7 +213,6 @@ body.dark-mode .theme-toggle .icon-dark {
     padding: 0.75rem 1.5625rem; /* Menggunakan rem */
     border-radius: 0.3125rem; /* Menggunakan rem */
     margin: 0 1.25rem 1.25rem; /* Menggunakan rem */
-    transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
     font-weight: 600;
     text-align: center;
 }
@@ -294,7 +293,6 @@ body.dark-mode .theme-toggle .icon-dark {
     background-color: var(--text-primary);
     color: var(--bg-primary);
     transform: translateY(-0.125rem); /* Menggunakan rem */
-    text-decoration: none;
 }
 
 .contact-info {
@@ -323,24 +321,24 @@ body.dark-mode .theme-toggle .icon-dark {
     text-decoration: none;
 }
 
-/* BARU: Gaya untuk Tombol Toggle Sidebar Desktop (sesuai sketsa) */
+/* BARU: Gaya untuk Tombol Toggle Sidebar Desktop */
 .sidebar-toggle-desktop {
     position: fixed;
     top: 50%;
     right: 280px; /* Lebar sidebar */
-    transform: translateY(-50%); /* Hapus translateX dari sini, atur di 'right' JS */
-    background-color: transparent; /* Hapus latar belakang bulat */
-    color: var(--text-primary); /* Warna ikon */
+    transform: translateY(-50%); 
+    background-color: transparent;
+    color: var(--text-primary); 
     border: none;
-    border-radius: 0; /* Hapus bentuk bulat */
-    width: 20px; /* Lebar hanya untuk ikon */
-    height: 60px; /* Tinggi untuk garis vertikal */
+    border-radius: 0;
+    width: 20px; 
+    height: 60px; 
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.3rem;
+    font-size: 1.5rem; /* Ukuran ikon panah */
     cursor: pointer;
-    box-shadow: none; /* Hapus shadow */
+    box-shadow: none; 
     
     /* Reset gaya bawaan browser untuk tombol */
     -webkit-appearance: none;
@@ -349,21 +347,25 @@ body.dark-mode .theme-toggle .icon-dark {
     outline: none;
     padding: 0;
     margin: 0;
+
+    /* HAPUS GARIS INI (border-left dan border-right) */
+    /* border-left: 1px solid var(--border-color); */
+    /* border-right: 1px solid var(--border-color); */
     
     transition: right 0.3s ease-out, transform 0.3s ease, color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; /* Transisi untuk posisi dan warna */
-    z-index: 101; /* Lebih tinggi dari sidebar */
+    z-index: 101; 
 }
 
 .sidebar-toggle-desktop:hover {
     background-color: transparent;
-    color: var(--accent-color); /* Warna ikon saat hover */
-    transform: translateY(-50%) scale(1.1); /* Efek scale kecil saat hover */
+    color: var(--accent-color); 
+    transform: translateY(-50%) scale(1.1);
     /* border-color: var(--accent-color); // Hapus ini jika garis dihapus */
 }
 
 /* Rotasi ikon saat sidebar disembunyikan (panah mengarah ke kiri) */
 .sidebar-toggle-desktop.sidebar-toggled .fas {
-    transform: rotate(180deg); /* Putar ikon */
+    transform: rotate(180deg);
 }
 
 /* Sembunyikan tombol ini di mobile */

@@ -44,7 +44,7 @@
             box-sizing: border-box; /* Pastikan padding di elemen lain tidak menyebabkan overflow */
         }
 
-        /* --- Animasi Partikel di Latar Belakang (Pure CSS) --- */
+        /* --- Animasi Partikel di Latar Belakang (Pure CSS - Optimalisasi Lag) --- */
         .particle-background {
             position: fixed; /* Menempel pada viewport */
             top: 0;
@@ -68,43 +68,40 @@
             background-color: transparent; /* Latar belakang untuk bintang */
             
             /* ---- Metode Bintang yang Lebih Efisien (Menggunakan Background-Image) ---- */
+            /* Jauh lebih sedikit radial-gradient, ukuran lebih besar, tile lebih besar */
             background-image: 
-                radial-gradient(5px 5px at 10% 20%, white, rgba(255,255,255,0)), 
-                radial-gradient(4px 4px at 30% 50%, white, rgba(255,255,255,0)),
-                radial-gradient(6px 6px at 50% 10%, white, rgba(255,255,255,0)),
-                radial-gradient(4.5px 4.5px at 70% 80%, white, rgba(255,255,255,0)),
-                radial-gradient(5.5px 5.5px at 90% 40%, white, rgba(255,255,255,0)),
+                radial-gradient(8px 8px at 15% 25%, white, rgba(255,255,255,0)), /* Bintang besar */
+                radial-gradient(6px 6px at 45% 75%, white, rgba(255,255,255,0)),
+                radial-gradient(10px 10px at 80% 10%, white, rgba(255,255,255,0)),
+                radial-gradient(7px 7px at 20% 90%, white, rgba(255,255,255,0)),
                 
-                radial-gradient(5px 5px at 20% 70%, var(--glow-color-base), rgba(161,105,239,0)),
-                radial-gradient(4px 4px at 40% 90%, var(--glow-color-base), rgba(161,105,239,0)),
-                radial-gradient(6px 6px at 60% 30%, var(--glow-color-base), rgba(161,105,239,0)),
-                radial-gradient(4.5px 4.5px at 80% 10%, var(--glow-color-base), rgba(161,105,239,0)),
-                radial-gradient(5.5px 5.5px at 100% 60%, var(--glow-color-base), rgba(161,105,239,0))
+                /* Partikel Ungu */
+                radial-gradient(8px 8px at 30% 60%, var(--glow-color-base), rgba(161,105,239,0)),
+                radial-gradient(6px 6px at 70% 40%, var(--glow-color-base), rgba(161,105,239,0)),
+                radial-gradient(10px 10px at 5% 10%, var(--glow-color-base), rgba(161,105,239,0))
             ; 
-            /* Ukuran tile yang besar, pakai vw/vh untuk lebih responsif */
-            background-size: 80vw 80vh; 
-            background-repeat: repeat; 
-            opacity: 0.05; /* Opacity dasar bintang, sangat redup */
+            background-size: 1500px 1500px; /* Ukuran "tile" yang sangat besar */
+            background-repeat: repeat; /* Mengulang tile */
+            opacity: 0.03; /* Opacity dasar bintang, sangat sangat redup */
             animation: 
-                starMove 120s linear infinite, /* Pergerakan bintang lebih lambat */
+                starMove 240s linear infinite, /* Pergerakan bintang sangat lambat */
                 starTwinkle 5s ease-in-out infinite alternate; /* Kelap-kelip */
         }
 
-        /* Layer bintang kedua (lebih besar, lebih sedikit) */
+        /* Layer bintang kedua (lebih besar, lebih sedikit, lebih lambat) */
         .particle-background::after {
             background-image: 
-                radial-gradient(6px 6px at 15% 45%, rgba(255,255,255,0.6), rgba(255,255,255,0)), 
-                radial-gradient(5px 5px at 75% 85%, rgba(255,255,255,0.6), rgba(255,255,255,0)),
-                radial-gradient(7px 7px at 30% 10%, rgba(161,105,239,0.6), rgba(161,105,239,0)),
-                radial-gradient(5.5px 5.5px at 90% 55%, rgba(161,105,239,0.6), rgba(161,105,239,0))
+                radial-gradient(10px 10px at 10% 80%, rgba(255,255,255,0.6), rgba(255,255,255,0)), 
+                radial-gradient(8px 8px at 90% 20%, rgba(255,255,255,0.6), rgba(255,255,255,0)),
+                radial-gradient(12px 12px at 50% 50%, rgba(161,105,239,0.6), rgba(161,105,239,0))
             ;
-            background-size: 100vw 100vh; /* Ukuran tile lebih besar */
+            background-size: 2000px 2000px; /* Ukuran tile lebih besar lagi */
             animation-delay: 1s; /* Delay sedikit agar tidak sama dengan layer pertama */
-            animation-duration: 180s; /* Kecepatan lebih lambat */
-            opacity: 0.04;
+            animation-duration: 360s; /* Kecepatan lebih lambat lagi */
+            opacity: 0.02; /* Lebih redup lagi */
             animation: 
-                starMove 180s linear infinite, 
-                starTwinkle 7s ease-in-out infinite alternate;
+                starMove 360s linear infinite, 
+                starTwinkle 8s ease-in-out infinite alternate;
         }
 
         /* Animasi pergerakan bintang */
@@ -116,7 +113,7 @@
         /* Animasi kelap-kelip bintang */
         @keyframes starTwinkle {
             0%, 100% { opacity: 0.05; } /* Sangat redup di titik teredup */
-            50% { opacity: 0.5; } /* Tidak terlalu terang di titik paling terang */
+            50% { opacity: 0.3; } /* Tidak terlalu terang di titik paling terang */
         }
 
 
@@ -126,9 +123,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* --- Perbaikan Padding & Width --- */
             max-width: 750px; /* Lebar maksimum konten */
             width: 100%; /* Penting untuk responsivitas */
+            /* --- Perbaikan Padding & Width --- */
             padding: clamp(1rem, 5vw, 3rem) clamp(1rem, 5vw, 2.5rem); /* Responsive padding min 1rem, max 3/2.5rem */
             box-sizing: border-box; /* Padding termasuk dalam lebar/tinggi elemen */
             position: relative; /* Penting agar main-content berada di atas partikel */
@@ -195,9 +192,8 @@
 
     <div class="main-content">
         <h1 class="status-header">MAINTENANCE</h1>
-        <p>Situs pribadi masih dalam tahap developing</p>
+        <p>Situs ini masih dalam tahap developing</p>
         <div class="countdown-timer" id="countdown">Loading...</div>
-        <p>by danny</p>
     </div>
 
     <footer>
@@ -223,7 +219,7 @@
         // Ganti dengan tanggal dan waktu target Anda. Contoh: 12 Juni 2025, jam 08:00:00 AM (WIB)
         // Format: 'Month Day, Year HH:MM:SS GMT+0700'
         // Anda perlu menyesuaikan GMT+0700 jika zona waktu Anda berbeda.
-        const targetDate = new Date('June 20, 2025 08:00:00 GMT+0700').getTime();
+        const targetDate = new Date('July 17, 2025 08:00:00 GMT+0700').getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();

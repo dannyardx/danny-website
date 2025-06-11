@@ -1,0 +1,75 @@
+/* css/sidebar-mobile.css */
+
+/* Mobile/Tablet Specific Sidebar Layout (Max-width: 991px) */
+@media (max-width: 991px) {
+    .main-layout {
+        grid-template-columns: 1fr; /* Di mobile, hanya satu kolom */
+        grid-template-rows: auto; /* Tinggi ditentukan oleh konten */
+        height: auto; /* Di mobile, layout bisa lebih tinggi dari viewport */
+    }
+
+    .main-page-content {
+        order: 2; /* Agar konten muncul di bawah sidebar jika diatur sebagai grid */
+        height: auto; /* Konten utama menyesuaikan tingginya */
+        overflow-y: visible; /* Biarkan konten mengalir secara alami */
+    }
+
+    .sidebar-nav {
+        position: fixed; /* Penting untuk sidebar mobile agar tetap di viewport */
+        top: 0;
+        right: 0;
+        width: 280px;
+        height: 100vh; /* Sidebar mengisi tinggi viewport */
+        transform: translateX(100%); /* Sembunyikan secara default (keluar layar) */
+        background-color: var(--bg-secondary);
+        box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+        transition: transform 0.3s ease-out;
+        z-index: 100;
+        
+        display: flex;
+        flex-direction: column; /* Ini sudah benar */
+        justify-content: space-between; /* Penting: distribusikan ruang secara merata */
+        align-items: center;
+        overflow-y: auto; /* Biarkan sidebar bisa digulir di mobile jika isinya terlalu panjang */
+        -webkit-overflow-scrolling: touch; /* Untuk performa gulir di iOS */
+        padding: 1.5rem 1rem 1rem; /* Pertahankan padding, tapi bisa diatur jika terlalu besar */
+    }
+    
+    .sidebar-nav.is-open {
+        transform: translateX(0); /* Tampilkan sidebar */
+    }
+
+    /* Pastikan header, nav, dan footer diatur sebagai item flex */
+    .sidebar-nav .sidebar-header {
+        order: 0;
+        flex-shrink: 0; /* Penting: tidak menyusut */
+    }
+
+    .sidebar-nav .main-nav {
+        order: 1;
+        flex-grow: 1; /* Penting: ini akan membuat nav mengambil semua ruang vertikal yang tersisa */
+        justify-content: center; /* Pusatkan item nav secara vertikal di ruang yang tersedia */
+    }
+
+    .main-nav ul {
+        flex-wrap: wrap; /* Jika Anda ingin item navigasi bisa wrap di baris baru */
+        justify-content: center; /* Pusatkan item jika wrap */
+    }
+
+    .sidebar-nav .sidebar-footer-buttons {
+        order: 2;
+        margin-top: auto; /* Ini sudah benar */
+        flex-shrink: 0; /* Penting: tidak menyusut */
+        padding-top: 0.5rem; /* Pastikan ada padding */
+        padding-bottom: 0.5rem; /* Pastikan ada padding */
+    }
+
+    /* Untuk theme-toggle di mobile (dari components.css tapi override di layout/responsive) */
+    .theme-toggle {
+        width: 3.3rem; /* Ukuran tombol lebih besar untuk sentuhan */
+        height: 3.3rem;
+        font-size: 1.7rem; /* Ukuran ikon lebih besar */
+        margin-top: 0.8rem; /* Jarak dari atas (atau bisa dihapus jika margin-top: auto di footer-buttons) */
+        flex-shrink: 0; /* Pastikan tidak menyusut */
+    }
+}

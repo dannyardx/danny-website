@@ -47,7 +47,6 @@ body {
     padding: 0;
     color: var(--text-primary);
     background-color: var(--bg-primary);
-    scroll-behavior: smooth;
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 
@@ -60,13 +59,16 @@ body {
 h1, h2, h3 {
     font-family: 'Montserrat', sans-serif;
     color: var(--text-primary);
-    margin-bottom: 1.25rem; /* Menggunakan rem */
+    margin-bottom: 1.25rem;
     font-weight: 700;
     transition: color 0.5s ease;
+    -webkit-transition: color 0.5s ease;
+    -moz-transition: color 0.5s ease;
+    -ms-transition: color 0.5s ease;
+    -o-transition: color 0.5s ease;
 }
 
 p {
-    /* Base style for p, specific p elements might override this */
     margin-bottom: 1rem; /* Menggunakan rem */
     font-weight: 300;
 }

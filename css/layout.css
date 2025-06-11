@@ -1,44 +1,93 @@
-/* --- Main Header (Sticky) --- */
-.main-header {
-    position: sticky;
-    top: 0;
-    width: 100%;
-    background-color: var(--header-bg);
-    box-shadow: 0 0.125rem 0.625rem var(--shadow-light); /* Menggunakan rem */
-    z-index: 1000;
-    padding: 0.8rem 0; /* Sedikit lebih tinggi untuk estetika */
-    border-bottom: 1px solid var(--header-border);
-    backdrop-filter: blur(0.3125rem); /* Efek blur yang bagus */
-    /* Transisi untuk efek slide header */
-    transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, transform 0.3s ease-out;
-    transform: translateY(0); /* Posisi awal, terlihat */
+/* --- Main Layout (Grid for two columns) --- */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px; /* Default untuk desktop: konten 1fr, sidebar 280px */
+    height: 100vh;
+    overflow: hidden;
+    transition: grid-template-columns 0.3s ease-out; /* Transisi untuk perubahan grid-template-columns */
+    position: relative;
 }
 
-/* Kelas yang akan ditambahkan oleh JavaScript untuk menyembunyikan header */
-.main-header.hide {
-    transform: translateY(-100%); /* Sembunyikan header ke atas */
+/* Kelas untuk menyembunyikan sidebar di desktop */
+.main-layout.sidebar-hidden-desktop {
+    grid-template-columns: 1fr 0px; /* Konten full, sidebar 0px */
 }
 
-.header-content {
-    display: flex;
-    justify-content: space-between; /* Menyebar elemen */
-    align-items: center;
-    gap: 2rem; /* Meningkatkan jarak antar elemen untuk kelegaan visual */
+/* BARU: Menyesuaikan container di dalam main-page-content
+   ketika sidebar disembunyikan agar konten juga melebar */
+.main-layout.sidebar-hidden-desktop .main-page-content .container {
+    max-width: 95%; /* Konten akan melebar hingga 95% dari lebar main-page-content */
+    padding: 0 1.5rem; /* Pertahankan padding horizontal agar konten tidak menempel tepi */
+    margin: 0 auto; /* Tetap pusatkan konten di dalam lebar yang tersedia */
 }
 
-.site-title {
-    font-size: 1.8rem; /* Sedikit lebih besar untuk logo */
-    font-weight: 700;
-    margin: 0;
+
+.main-page-content {
+    overflow-y: auto; /* Ini yang akan digulir di desktop */
+    overflow-x: hidden; /* Sembunyikan overflow horizontal */
+    height: 100vh; /* Pastikan ini mengisi tinggi penuh agar bisa digulir */
+    position: relative;
+    -webkit-overflow-scrolling: touch; /* Meningkatkan pengguliran di iOS */
+}
+
+.sidebar-nav {
+    background-color: var(--bg-secondary);
     color: var(--text-primary);
+    padding: 1.5rem 1rem 1rem;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto; /* Sidebar juga bisa digulir jika isinya terlalu panjang */
+    position: relative;
+    z-index: 50;
+    transform: translateX(0); /* Default: terlihat di desktop */
+    transition: transform 0.3s ease-out; /* Animasi geser sidebar */
+}
+
+/* Sidebar Header */
+.sidebar-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: sticky; 
+    top: 0;
+    background-color: var(--bg-secondary);
+    padding-bottom: 1rem;
+    z-index: 10;
+    order: 0;
     flex-shrink: 0;
 }
 
+.site-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.site-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.site-title a:hover {
+    color: var(--accent-color);
+}
+
+/* Navigasi di Sidebar (Tentang, Keahlian, dll.) */
 .main-nav {
-    flex-grow: 1; /* Memungkinkan navigasi mengambil ruang di tengah */
+    width: 100%;
     display: flex;
-    justify-content: center; /* Memusatkan navigasi */
-    order: 2; /* Urutan di desktop */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1; /* Penting: Ini akan membuat nav mengambil semua ruang vertikal yang tersisa */
+    order: 1;
 }
 
 .main-nav ul {
@@ -46,85 +95,92 @@
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 2rem; /* Jarak antar item navigasi yang lebih lapang */
-}
-
-.main-nav a {
-    font-weight: 600;
-    color: var(--text-primary);
-    padding: 0.5rem 0; /* Padding vertikal lebih baik */
-    position: relative;
-    transition: color 0.3s ease;
-    font-size: 1rem; /* Ukuran font standar */
-}
-
-.main-nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -0.3rem; /* Sedikit di bawah teks */
-    width: 0;
-    height: 0.15rem; /* Lebih tebal sedikit */
-    background-color: var(--accent-color);
-    transition: width 0.3s ease;
-}
-
-.main-nav a:hover::after,
-.main-nav a.active::after { /* Tambahkan .active jika ada highlight halaman aktif */
+    flex-direction: column;
     width: 100%;
 }
 
-.main-nav a:hover {
-    color: var(--accent-color);
+.main-nav li {
+    margin-bottom: 0.3rem;
 }
 
-/* Theme Toggle Button */
-.theme-toggle {
-    background: var(--bg-secondary);
+.main-nav a {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
-    width: 2.8rem; /* Sedikit lebih besar */
-    height: 2.8rem; /* Sedikit lebih besar */
+    text-decoration: none;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-align: center;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+    background-color: transparent;
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.main-nav a::after {
+    content: none;
+}
+
+/* Container untuk tombol di bagian bawah sidebar */
+.sidebar-footer-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: auto; /* Ini sudah benar, akan mendorong ke bawah */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-top: 1px solid var(--border-color);
+    align-items: flex-end;
+    order: 2;
+    flex-shrink: 0;
+}
+
+/* Theme Toggle Button (di dalam sidebar) */
+.theme-toggle {
+    background: transparent;
+    color: var(--text-primary);
+    border: none;
+    border-radius: 0;
+    width: auto;
+    height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.4rem; /* Ikon lebih besar */
+    font-size: 1.5rem;
     cursor: pointer;
-    box-shadow: 0 0.125rem 0.3125rem var(--shadow-light);
+    box-shadow: none;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     z-index: 1001;
     flex-shrink: 0;
-    order: 3; /* Urutan di desktop */
+    padding: 0.5rem;
 }
 
 .theme-toggle:hover {
-    background-color: var(--border-color);
-    box-shadow: 0 0.2rem 0.6rem var(--shadow-medium); /* Efek shadow saat hover */
+    background-color: transparent;
+    color: var(--accent-color);
+    box-shadow: none;
 }
 
-.theme-toggle .icon-dark {
-    display: none;
-}
+body.dark-mode .theme-toggle .icon-light { display: none; }
+body.dark-mode .theme-toggle .icon-dark { display: inline-block; }
 
-body.dark-mode .theme-toggle .icon-light {
-    display: none;
-}
-
-body.dark-mode .theme-toggle .icon-dark {
-    display: inline-block;
-}
-
-/* --- Hero Section (Content after sticky header) --- */
+/* --- Hero Section (Konten utama) --- */
 .hero-after-header {
     background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
     color: var(--text-primary);
-    padding: 7rem 0 5rem; /* Menyesuaikan padding atas karena header 0.8rem */
+    padding: 5rem 0;
     text-align: center;
     position: relative;
     overflow: hidden;
     transition: background 0.5s ease, color 0.5s ease;
-    min-height: calc(100vh - 5rem - 0.8rem); /* Min-height dikurangi tinggi footer dan header */
+    min-height: 100vh; /* Tetap ini jika hero section harus minimal 100% tinggi viewport */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -132,23 +188,23 @@ body.dark-mode .theme-toggle .icon-dark {
 }
 
 .hero-after-header .hero-content {
-    max-width: 50rem; /* Menggunakan rem */
+    max-width: 50rem;
 }
 
 .hero-after-header h1 {
-    font-size: 3.5rem; /* Menggunakan rem */
-    margin-bottom: 0.9375rem; /* Menggunakan rem */
-    letter-spacing: 0.0625rem; /* Menggunakan rem */
-
-    /* Gaya untuk efek glow */
-    color: var(--h1-color-light); /* Gunakan variabel warna H1 untuk mode terang */
+    font-size: 3.5rem;
+    margin-bottom: 0.9375rem;
+    letter-spacing: 0.0625rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    color: var(--h1-color-light);
     text-shadow:
-        0 0 0.5rem var(--h1-glow-color-light), /* Blur radius 0.5rem (8px) */
-        0 0 1rem var(--h1-glow-color-light); /* Blur radius 1rem (16px) */
-    transition: color 0.5s ease, text-shadow 0.5s ease; /* Tambahkan transisi untuk glow */
+        0 0 0.5rem var(--h1-glow-color-light),
+        0 0 1rem var(--h1-glow-color-light);
+    transition: color 0.5s ease, text-shadow 0.5s ease;
 }
 
-/* Modifikasi gaya H1 untuk Dark Mode */
 body.dark-mode .hero-after-header h1 {
     color: var(--h1-color-dark);
     text-shadow:
@@ -156,58 +212,42 @@ body.dark-mode .hero-after-header h1 {
         0 0 1rem var(--h1-glow-color-dark);
 }
 
-/* Sections (Content) - Base Style */
+/* Sections (Content) - Base Style for Scroll Animation */
 .section {
-    padding: 5rem 0; /* Menggunakan rem */
+    padding: 5rem 0;
     background-color: var(--bg-primary);
-    border-bottom: 1px solid var(--border-color);
-    /* Mengembalikan ke transisi dasar, menghapus transform/opacity scroll */
-    transition: opacity 1s ease-out, transform 1s ease-out, background-color 0.5s ease, border-color 0.5s ease;
-    opacity: 1; /* Pastikan selalu terlihat secara default */
-    transform: translateY(0); /* Pastikan selalu di posisi normal secara default */
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    position: relative;
 }
 
 .section:last-child {
     border-bottom: none;
 }
 
-/* MENGHAPUS GAYA UNTUK scroll-animated-section KARENA MENYEBABKAN BLINK-BLINK */
-/* .scroll-animated-section {
-    opacity: 0;
-    transform: translateY(100vh);
-    transition: opacity 0.5s ease-out, transform 0.8s ease-out;
-}
-.scroll-animated-section.is-visible {
+.section.is-visible {
     opacity: 1;
     transform: translateY(0);
 }
-.scroll-animated-section.scroll-down-hide {
-    opacity: 0;
-    transform: translateY(100vh);
-}
-.scroll-animated-section.scroll-up-hide {
-    opacity: 0;
-    transform: translateY(-100vh);
-} */
-
 
 .section h2 {
     text-align: center;
-    font-size: 3rem; /* Menggunakan rem */
-    margin-bottom: 3.125rem; /* Menggunakan rem */
+    font-size: 3rem;
+    margin-bottom: 3.125rem;
     position: relative;
     color: var(--text-primary);
-    letter-spacing: 0.03125rem; /* Menggunakan rem */
+    letter-spacing: 0.03125rem;
 }
 
 .section h2::after {
     content: '';
     display: block;
-    width: 5rem; /* Menggunakan rem */
-    height: 0.3125rem; /* Menggunakan rem */
+    width: 5rem;
+    height: 0.3125rem;
     background-color: var(--accent-color);
-    margin: 0.9375rem auto 0; /* Menggunakan rem */
-    border-radius: 0.1875rem; /* Menggunakan rem */
+    margin: 0.9375rem auto 0;
+    border-radius: 0.1875rem;
     transition: background-color 0.5s ease;
 }
 
@@ -216,13 +256,77 @@ body.dark-mode .hero-after-header h1 {
     background-color: transparent;
     color: var(--footer-text-color);
     text-align: center;
-    padding: 2.5rem 0; /* Menggunakan rem */
-    font-size: 0.95rem; /* Menggunakan rem */
-    transition: background-color 0.5s ease, color 0.5s ease;
+    padding: 2.5rem 0;
+    font-size: 0.95rem;
 }
 
 .transparent-footer .container {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* --- Responsive Layout Adjustments (Desktop only, mobile moved to sidebar-mobile.css) --- */
+@media (min-width: 992px) {
+    .main-layout {
+        grid-template-columns: 1fr 280px;
+        height: 100vh;
+    }
+    /* Tombol titik tiga mobile-toggle-button akan disembunyikan di desktop */
+    .mobile-sidebar-toggle {
+        display: none; 
+    } 
+    
+    .sidebar-nav {
+        transform: translateX(0); /* Pastikan terlihat */
+        position: relative;
+        /* width: auto; // Ini sudah ada, tidak perlu diubah */
+        box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+        justify-content: space-between;
+        transition: transform 0.3s ease-out; /* Transisi untuk geser sidebar */
+    }
+
+    /* BARU: MENGELOLA POSISI SIDEBAR SAAT DISEMBUNYIKAN DI DESKTOP */
+    .sidebar-nav.hidden-desktop {
+        transform: translateX(100%); /* Geser sidebar ke kanan keluar layar */
+        /* Hapus properti width, overflow, padding, box-shadow dari sini */
+        /* Karena grid akan mengaturnya ke 0px dan transform menangani pergeseran visual */
+    }
+}
+
+/* Gaya umum untuk dim dan no-scroll */
+.main-page-content.dim-content {
+    filter: brightness(0.5);
+    transition: filter 0.3s ease;
+}
+
+body.no-scroll {
+    overflow: hidden; /* Mencegah gulir pada body saat sidebar terbuka */
+}
+
+/* Catatan: main-page-content sekarang digulir oleh dirinya sendiri */
+.main-page-content {
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar-nav {
+    z-index: 100;
+}
+
+/* --- Overlay untuk menutup sidebar --- */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    display: none;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-overlay.is-visible {
+    display: block;
 }

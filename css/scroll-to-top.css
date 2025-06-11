@@ -1,0 +1,51 @@
+/* css/scroll-to-top.css */
+
+/* Gaya untuk Tombol Scroll-to-Top */
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 20px; /* Jarak dari bawah */
+    right: 20px; /* Jarak dari kanan */
+    background-color: transparent;
+    color: var(--accent-color); /* Warna ikon panah */
+    border: none;
+    width: 45px; /* Lebar tombol */
+    height: 45px; /* Tinggi tombol */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem; /* Ukuran ikon panah */
+    cursor: pointer;
+    box-shadow: none;
+    opacity: 0; /* Awalnya tidak terlihat saat halaman di atas */
+    visibility: hidden;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-out, color 0.3s ease;
+    z-index: 900;
+}
+
+/* Kelas ini akan diterapkan saat tombol muncul tetapi belum di akhir halaman */
+.scroll-to-top-btn.transparent-on-scroll {
+    opacity: 0.3; /* Transparan di tengah halaman */
+    visibility: visible; /* Tetap terlihat */
+}
+
+/* Kelas ini akan diterapkan saat tombol muncul dan berada di akhir halaman */
+.scroll-to-top-btn.show {
+    opacity: 1; /* Penuh saat di akhir halaman */
+    visibility: visible;
+}
+
+.scroll-to-top-btn:hover {
+    color: var(--text-primary); /* Warna ikon saat hover */
+    background-color: transparent;
+}
+
+/* Sesuaikan ukuran untuk mobile agar tidak terlalu besar */
+@media (max-width: 767px) {
+    .scroll-to-top-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.6rem;
+        bottom: 15px;
+        right: 15px;
+    }
+}

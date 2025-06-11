@@ -294,6 +294,7 @@ body.dark-mode .theme-toggle .icon-dark {
     background-color: var(--text-primary);
     color: var(--bg-primary);
     transform: translateY(-0.125rem); /* Menggunakan rem */
+    text-decoration: none;
 }
 
 .contact-info {
@@ -320,4 +321,54 @@ body.dark-mode .theme-toggle .icon-dark {
     opacity: 1;
     color: var(--accent-color);
     text-decoration: none;
+}
+
+/* BARU: Gaya untuk Tombol Toggle Sidebar Desktop (sesuai sketsa) */
+.sidebar-toggle-desktop {
+    position: fixed;
+    top: 50%;
+    right: 280px; /* Lebar sidebar */
+    transform: translateY(-50%); /* Hapus translateX dari sini, atur di 'right' JS */
+    background-color: transparent; /* Hapus latar belakang bulat */
+    color: var(--text-primary); /* Warna ikon */
+    border: none;
+    border-radius: 0; /* Hapus bentuk bulat */
+    width: 20px; /* Lebar hanya untuk ikon */
+    height: 60px; /* Tinggi untuk garis vertikal */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: none; /* Hapus shadow */
+    
+    /* Reset gaya bawaan browser untuk tombol */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    
+    transition: right 0.3s ease-out, transform 0.3s ease, color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; /* Transisi untuk posisi dan warna */
+    z-index: 101; /* Lebih tinggi dari sidebar */
+}
+
+.sidebar-toggle-desktop:hover {
+    background-color: transparent;
+    color: var(--accent-color); /* Warna ikon saat hover */
+    transform: translateY(-50%) scale(1.1); /* Efek scale kecil saat hover */
+    /* border-color: var(--accent-color); // Hapus ini jika garis dihapus */
+}
+
+/* Rotasi ikon saat sidebar disembunyikan (panah mengarah ke kiri) */
+.sidebar-toggle-desktop.sidebar-toggled .fas {
+    transform: rotate(180deg); /* Putar ikon */
+}
+
+/* Sembunyikan tombol ini di mobile */
+@media (max-width: 991px) {
+    .sidebar-toggle-desktop {
+        display: none;
+    }
 }

@@ -1,0 +1,60 @@
+/* css/mobile-toggle-button.css */
+
+/* --- Mobile Sidebar Toggle Button Styles --- */
+.mobile-sidebar-toggle {
+    position: fixed; /* Penting: agar tetap di layar saat menggulir */
+    top: 20px;
+    right: 20px;
+    
+    background-color: transparent;
+    color: var(--text-primary); 
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    font-size: 1.8rem;
+    transition: opacity 0.3s ease-out, color 0.3s ease, transform 0.2s ease; 
+    display: flex; /* Default: terlihat (flex) */
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    z-index: 1000;
+    opacity: 1; 
+    pointer-events: auto; 
+}
+
+.mobile-sidebar-toggle:hover {
+    color: var(--accent-color); 
+    transform: scale(1.1);
+}
+
+.mobile-sidebar-toggle .fas {
+    line-height: 1;
+}
+
+/* Tampilkan tombol ini hanya di ukuran layar mobile/tablet */
+@media (max-width: 991px) {
+    .mobile-sidebar-toggle {
+        display: flex; /* Tampilkan sebagai flex di mobile */
+    }
+}
+
+/* Sembunyikan tombol ini di desktop */
+@media (min-width: 992px) {
+    .mobile-sidebar-toggle {
+        display: none; /* Sembunyikan sepenuhnya di desktop */
+    }
+}
+
+/* Gaya untuk membuat tombol transparan di hero section (jika opacity: 0.3)
+   Atau full opacity (jika opacity: 1) seperti yang Anda atur terakhir. */
+.mobile-sidebar-toggle.faded-on-hero {
+    opacity: 1; /* Sesuai pengaturan terakhir Anda: selalu terlihat penuh di hero */
+    pointer-events: auto;
+}
+
+/* Gaya untuk menyembunyikan tombol saat digulir jauh ke bawah */
+.mobile-sidebar-toggle.hidden-on-scroll {
+    opacity: 0;
+    pointer-events: none;
+}

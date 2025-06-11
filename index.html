@@ -30,48 +30,93 @@
             justify-content: center;
             min-height: 100vh; /* Pastikan halaman setidaknya setinggi viewport */
             margin: 0;
-            padding: 20px;
+            padding: 0; /* Padding di body diatur 0, akan dikontrol di main-content */
             text-align: center;
             /* Properti untuk mencegah seleksi teks */
             -webkit-user-select: none; 
             -moz-user-select: none;    
             -ms-user-select: none;     
             user-select: none;         
-            overflow: hidden; /* Mencegah scrollbar yang tidak diinginkan */
-            position: relative; /* Diperlukan untuk background partikel absolut */
+            /* --- Perbaikan Overflow --- */
+            overflow-x: hidden; /* Pastikan tidak ada scrollbar horizontal */
+            overflow-y: auto;   /* Izinkan scroll vertikal jika konten melebihi tinggi */
+            position: relative; 
+            box-sizing: border-box; /* Pastikan padding di elemen lain tidak menyebabkan overflow */
         }
 
-        /* --- Kontainer Partikel (Tidak ada pseudo-element lagi) --- */
+        /* --- Animasi Partikel di Latar Belakang (Pure CSS) --- */
         .particle-background {
             position: fixed; /* Menempel pada viewport */
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw; /* Menggunakan vw untuk lebar penuh viewport */
+            height: 100vh; /* Menggunakan vh untuk tinggi penuh viewport */
             pointer-events: none; /* Memungkinkan interaksi dengan elemen di bawahnya */
             z-index: 0; /* Pastikan di belakang konten utama */
             background: transparent; /* Pastikan latar belakangnya transparan */
         }
 
-        /* --- Gaya untuk Partikel Individu (Dibuat oleh JS) --- */
-        .star-particle {
+        /* Pseudo-element untuk layer bintang pertama */
+        .particle-background::before,
+        .particle-background::after {
+            content: '';
             position: absolute;
-            background-color: white; /* Warna dasar partikel */
-            border-radius: 50%; /* Bentuk lingkaran */
-            opacity: 0; /* Awalnya tidak terlihat */
-            /* Animasi akan diset oleh JS untuk randomisasi */
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: transparent; /* Latar belakang untuk bintang */
+            
+            /* ---- Metode Bintang yang Lebih Efisien (Menggunakan Background-Image) ---- */
+            background-image: 
+                radial-gradient(5px 5px at 10% 20%, white, rgba(255,255,255,0)), 
+                radial-gradient(4px 4px at 30% 50%, white, rgba(255,255,255,0)),
+                radial-gradient(6px 6px at 50% 10%, white, rgba(255,255,255,0)),
+                radial-gradient(4.5px 4.5px at 70% 80%, white, rgba(255,255,255,0)),
+                radial-gradient(5.5px 5.5px at 90% 40%, white, rgba(255,255,255,0)),
+                
+                radial-gradient(5px 5px at 20% 70%, var(--glow-color-base), rgba(161,105,239,0)),
+                radial-gradient(4px 4px at 40% 90%, var(--glow-color-base), rgba(161,105,239,0)),
+                radial-gradient(6px 6px at 60% 30%, var(--glow-color-base), rgba(161,105,239,0)),
+                radial-gradient(4.5px 4.5px at 80% 10%, var(--glow-color-base), rgba(161,105,239,0)),
+                radial-gradient(5.5px 5.5px at 100% 60%, var(--glow-color-base), rgba(161,105,239,0))
+            ; 
+            /* Ukuran tile yang besar, pakai vw/vh untuk lebih responsif */
+            background-size: 80vw 80vh; 
+            background-repeat: repeat; 
+            opacity: 0.05; /* Opacity dasar bintang, sangat redup */
+            animation: 
+                starMove 120s linear infinite, /* Pergerakan bintang lebih lambat */
+                starTwinkle 5s ease-in-out infinite alternate; /* Kelap-kelip */
         }
 
-        /* Keyframes untuk kelap-kelip (twinkle) */
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; transform: scale(1); } /* Transparan saat redup */
-            50% { opacity: var(--star-opacity, 0.7); transform: scale(1.1); } /* Terang saat berkedip, sedikit membesar */
+        /* Layer bintang kedua (lebih besar, lebih sedikit) */
+        .particle-background::after {
+            background-image: 
+                radial-gradient(6px 6px at 15% 45%, rgba(255,255,255,0.6), rgba(255,255,255,0)), 
+                radial-gradient(5px 5px at 75% 85%, rgba(255,255,255,0.6), rgba(255,255,255,0)),
+                radial-gradient(7px 7px at 30% 10%, rgba(161,105,239,0.6), rgba(161,105,239,0)),
+                radial-gradient(5.5px 5.5px at 90% 55%, rgba(161,105,239,0.6), rgba(161,105,239,0))
+            ;
+            background-size: 100vw 100vh; /* Ukuran tile lebih besar */
+            animation-delay: 1s; /* Delay sedikit agar tidak sama dengan layer pertama */
+            animation-duration: 180s; /* Kecepatan lebih lambat */
+            opacity: 0.04;
+            animation: 
+                starMove 180s linear infinite, 
+                starTwinkle 7s ease-in-out infinite alternate;
         }
-        
-        /* Keyframes untuk gerakan partikel */
-        @keyframes moveStar {
-            from { transform: translate(0, 0); }
-            to { transform: translate(var(--star-dx), var(--star-dy)); } /* Bergerak ke offset acak */
+
+        /* Animasi pergerakan bintang */
+        @keyframes starMove {
+            from { background-position: 0 0; }
+            to { background-position: 100% 100%; } /* Gerak diagonal */
+        }
+
+        /* Animasi kelap-kelip bintang */
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.05; } /* Sangat redup di titik teredup */
+            50% { opacity: 0.5; } /* Tidak terlalu terang di titik paling terang */
         }
 
 
@@ -81,9 +126,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            /* --- Perbaikan Padding & Width --- */
             max-width: 750px; /* Lebar maksimum konten */
-            width: 100%;
-            padding: 3rem 2.5rem; /* Padding di sekitar konten */
+            width: 100%; /* Penting untuk responsivitas */
+            padding: clamp(1rem, 5vw, 3rem) clamp(1rem, 5vw, 2.5rem); /* Responsive padding min 1rem, max 3/2.5rem */
             box-sizing: border-box; /* Padding termasuk dalam lebar/tinggi elemen */
             position: relative; /* Penting agar main-content berada di atas partikel */
             z-index: 1; /* Pastikan konten utama berada di atas background partikel */
@@ -91,25 +137,29 @@
 
         .status-header {
             font-family: 'Montserrat', sans-serif; /* Font untuk judul status */
-            font-size: 3.8rem;
+            /* --- Perbaikan Font Size Responsif --- */
+            font-size: clamp(2.2rem, 8vw, 3.8rem); /* Ukuran font responsif */
             color: var(--glow-color-base); /* Warna teks utama jadi ungu */
-            margin-bottom: 1.5rem; /* Mengurangi jarak bawah agar lebih dekat dengan paragraf */
+            margin-bottom: 1.5rem; /* Jarak bawah agar lebih dekat dengan paragraf */
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em; /* Spasi antar huruf */
         }
 
         p {
-            font-size: 1.1rem;
+            /* --- Perbaikan Font Size Responsif --- */
+            font-size: clamp(0.9rem, 3vw, 1.1rem); /* Ukuran font responsif */
             color: var(--text-secondary); /* Warna teks paragraf dari variabel */
             line-height: 1.8;
             margin-bottom: 1.5rem; /* Jarak bawah paragraf */
             max-width: 600px; /* Lebar maksimum paragraf */
+            box-sizing: border-box; /* Penting untuk p */
         }
 
         .countdown-timer {
             font-family: 'Montserrat', sans-serif; /* Font untuk timer */
-            font-size: 2rem;
+            /* --- Perbaikan Font Size Responsif --- */
+            font-size: clamp(1.5rem, 5vw, 2rem); /* Ukuran font responsif */
             color: var(--blue-color); /* Warna biru dari variabel */
             margin-top: 1rem;
             margin-bottom: 1.5rem; /* Mengurangi jarak bawah timer */
@@ -124,19 +174,19 @@
             font-size: 0.85rem;
             color: var(--text-secondary); /* Warna teks abu-abu terang */
             z-index: 1; /* Pastikan di atas partikel latar belakang */
+            box-sizing: border-box; /* Penting untuk footer */
         }
 
 
-        /* Responsive adjustments */
+        /* --- Media Queries (Revisi Tambahan) --- */
+        /* Media queries menjadi lebih jarang digunakan untuk font-size/padding
+           karena clamp() sudah menghandle sebagian besar.
+           Namun, tetap penting untuk perubahan layout atau jika clamp() tidak cukup. */
         @media (max-width: 768px) {
-            .status-header { font-size: 3rem; }
-            p { font-size: 1rem; }
-            .countdown-timer { font-size: 1.5rem; }
+            /* Tidak ada perubahan spesifik yang besar jika clamp() bekerja baik */
         }
         @media (max-width: 480px) {
-            .status-header { font-size: 2.2rem; letter-spacing: 0.05em; }
-            p { font-size: 0.9rem; }
-            .countdown-timer { font-size: 1.2rem; }
+            /* Tidak ada perubahan spesifik yang besar jika clamp() bekerja baik */
         }
     </style>
 </head>
@@ -170,8 +220,10 @@
         const countdownElement = document.getElementById('countdown');
 
         // Set target date/time for maintenance completion
-        // >>> PERUBAHAN DI SINI: Tanggal target diubah menjadi 20 Juni 2025 <<<
-        const targetDate = new Date('June 20, 2025 08:00:00 GMT+0700').getTime(); 
+        // Ganti dengan tanggal dan waktu target Anda. Contoh: 12 Juni 2025, jam 08:00:00 AM (WIB)
+        // Format: 'Month Day, Year HH:MM:SS GMT+0700'
+        // Anda perlu menyesuaikan GMT+0700 jika zona waktu Anda berbeda.
+        const targetDate = new Date('June 20, 2025 08:00:00 GMT+0700').getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -197,59 +249,6 @@
         // Jalankan countdown saat halaman dimuat
         if (countdownElement) {
             updateCountdown();
-        }
-
-        // --- JavaScript untuk Menghasilkan dan Menganimasikan Partikel ---
-        const particleContainer = document.querySelector('.particle-background');
-        const numParticles = 25; // Jumlah partikel yang ingin dibuat (sesuaikan)
-        const minSize = 32; // Ukuran minimal partikel (px) - Diubah menjadi 32
-        const maxSize = 64; // Ukuran maksimal partikel (px) - Diubah menjadi 64
-        const minMoveDuration = 20; // Durasi animasi gerakan minimal (detik)
-        const maxMoveDuration = 60; // Durasi animasi gerakan maksimal (detik)
-        const twinkleDuration = 10; // Durasi kelap-kelip (detik) - Diubah menjadi 10
-
-        // Ambil warna ungu dari CSS variable
-        const purpleColor = getComputedStyle(document.documentElement).getPropertyValue('--glow-color-base');
-
-        function getRandom(min, max) {
-            return Math.random() * (max - min) + min;
-        }
-
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.classList.add('star-particle');
-
-            const size = getRandom(minSize, maxSize); // Ukuran acak dalam rentang baru
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-
-            // Posisi acak di seluruh viewport
-            particle.style.top = `${getRandom(0, 100)}vh`;
-            particle.style.left = `${getRandom(0, 100)}vw`;
-
-            // Random warna (putih atau ungu)
-            particle.style.backgroundColor = Math.random() > 0.5 ? 'white' : purpleColor;
-
-            // Random opacity dan delay untuk animasi twinkle
-            const opacity = getRandom(0.3, 0.9);
-            const animationDelay = getRandom(0, twinkleDuration); // Delay acak untuk animasi
-
-            particle.style.setProperty('--star-opacity', opacity);
-            // Jarak gerakan partikel acak, proporsional dengan ukuran viewport
-            particle.style.setProperty('--star-dx', getRandom(-200, 200) + 'px'); 
-            particle.style.setProperty('--star-dy', getRandom(-200, 200) + 'px'); 
-
-            // Kombinasi animasi kelap-kelip dan gerakan
-            particle.style.animation = 
-                `twinkle ${twinkleDuration}s linear infinite ${animationDelay}s forwards, ` +
-                `moveStar ${getRandom(minMoveDuration, maxMoveDuration)}s linear infinite ${animationDelay}s alternate`; 
-            
-            particleContainer.appendChild(particle);
-        }
-
-        // Buat sejumlah partikel
-        for (let i = 0; i < numParticles; i++) {
-            createParticle();
         }
     </script>
 </body>

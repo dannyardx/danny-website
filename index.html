@@ -46,14 +46,14 @@
             -moz-user-select: none;    
             -ms-user-select: none;     
             user-select: none;         
-            /* --- Perbaikan Overflow --- */
+            /* --- Perbaikan Overflow (Biarkan auto untuk Y jika konten lebih tinggi) --- */
             overflow-x: hidden; /* Pastikan tidak ada scrollbar horizontal */
-            overflow-y: hidden; /* Menonaktifkan scroll vertikal juga jika konten muat di viewport */
+            overflow-y: auto;   /* Izinkan scroll vertikal jika konten melebihi tinggi */
             position: relative; 
             box-sizing: border-box; /* Pastikan padding di elemen lain tidak menyebabkan overflow */
         }
 
-        /* --- Kontainer Partikel --- */
+        /* --- Kontainer Partikel (Dibuat dan Dianimasikan oleh JS) --- */
         .particle-background {
             position: fixed; /* Menempel pada viewport */
             top: 0;
@@ -63,12 +63,12 @@
             pointer-events: none; /* Memungkinkan interaksi dengan elemen di bawahnya */
             z-index: 0; /* Pastikan di belakang konten utama */
             background: transparent; /* Pastikan latar belakangnya transparan */
-            /* DEBUG: border: 1px solid red; */ /* Tambahkan ini untuk melihat batas kontainer partikel */
+            /* DEBUG: border: 1px solid red; */ /* Hapus border debug jika tidak perlu */
         }
 
         /* --- Gaya untuk Partikel Individu (Dibuat oleh JS) --- */
         .star-particle {
-            position: absolute;
+            position: absolute; /* Penting untuk posisi individual */
             background-color: white; /* Warna dasar, akan di-override oleh JS */
             border-radius: 50%; /* Bentuk lingkaran */
             opacity: 0; /* Awalnya tidak terlihat */
@@ -83,8 +83,8 @@
         
         /* Keyframes untuk gerakan partikel */
         @keyframes moveStar {
-            from { transform: translate(0, 0); }
-            to { transform: translate(var(--star-dx), var(--star-dy)); } /* Bergerak ke offset acak */
+            from { transform: translate(var(--star-start-x), var(--star-start-y)); } /* Posisi awal acak */
+            to { transform: translate(var(--star-end-x), var(--star-end-y)); } /* Posisi akhir acak */
         }
 
 
@@ -281,14 +281,15 @@
             /* DEBUG: border: 1px solid green; */ /* Tambahkan ini untuk melihat batas kontainer pets */
         }
         .pixel-pet-img { /* Ganti nama kelas untuk gambar */
-            height: clamp(30px, 6vw, 60px); /* Ukuran gambar hewan peliharaan */
-            width: auto; /* Jaga rasio aspek */
-            image-rendering: pixelated; /* Penting untuk menjaga efek piksel */
+            /* --- Gaya dasar untuk gambar hewan peliharaan --- */
             position: absolute; /* Untuk gerakan independen */
             bottom: 0; /* Mulai dari bawah container */
+            width: var(--pet-display-width, 32px); /* Lebar display, akan di-override oleh JS */
+            height: var(--pet-display-height, 32px); /* Tinggi display, akan di-override oleh JS */
+            image-rendering: pixelated; /* Penting untuk menjaga efek piksel */
             transform-origin: center bottom; /* Titik pivot untuk scaling/flipping */
             will-change: transform; /* Untuk performa animasi */
-            /* DEBUG: border: 1px solid blue; */ /* Tambahkan ini untuk melihat batas setiap pet */
+            /* Animasi akan diatur oleh JS */
         }
         /* Keyframes untuk gerakan horizontal pet dan float akan dibuat dinamis oleh JS */
 
@@ -319,7 +320,7 @@
         </div>
         <p class="progress-text-label">Sedang Proses Pengerjaan webnya... (10%)</p>
 
-        <button id="check-updates-button" class="check-updates-button">Cek Update Webnya</button>
+        <button id="check-updates-button" class="check-updates-button">Cek Update Proggres!</button>
     </div>
 
     <div class="pixel-pets-container" id="pixel-pets-container">
@@ -334,23 +335,13 @@
             <h2>Update Log</h2>
             <button id="popup-close-button"><i class="fas fa-times"></i></button>
             <div id="update-log">
-                <h3>Versi 1.1.0 (2025-07-10)</h3>
+                <h3>Versi 1.0.0 (10-06-2025)</h3>
                 <ul>
-                    <li>Menambahkan animasi partikel latar belakang.</li>
-                    <li>Mengoptimalkan responsivitas untuk perangkat seluler.</li>
-                    <li>Memperbaiki bug tampilan footer.</li>
-                </ul>
-                <h3>Versi 1.0.0 (2025-07-01)</h3>
-                <ul>
-                    <li>Peluncuran halaman maintenance awal.</li>
-                    <li>Fitur countdown timer.</li>
-                    <li>Pencegahan klik kanan dan inspect element.</li>
-                </ul>
-                <h3>Versi 1.2.0 (2025-07-15)</h3>
-                <ul>
-                    <li>Menambahkan progress bar.</li>
-                    <li>Menambahkan animasi pixel pets di bagian bawah.</li>
-                    <li>Optimasi performa animasi.</li>
+                    <li>Menambahkan Portofolio Page.</li>
+                    <li>Konfigurasi Tampilan Page.</li>
+                    <li>Megelola Database Page.</li>
+                    <li>Maintenace Page.</li>
+                    <li>Launching Domain.</li>
                 </ul>
             </div>
         </div>
@@ -498,7 +489,7 @@
             // Tambahkan jenis hewan peliharaan lain di sini
         ];
 
-        const numPets = 25; // Jumlah total hewan peliharaan yang ingin muncul (sesuaikan)
+        const numPets = 10; // Jumlah total hewan peliharaan yang ingin muncul (sesuaikan)
         const petsInstances = []; // Array untuk menyimpan referensi dan state hewan peliharaan
 
         // Fungsi pembantu untuk menghasilkan angka acak dalam rentang
@@ -570,24 +561,76 @@
             globalAnimationFrameId = requestAnimationFrame(animateAllPets); // Panggil diri sendiri untuk frame berikutnya
         }
 
-        // Buat sejumlah hewan peliharaan
-        for (let i = 0; i < numPets; i++) {
-            createAndAnimatePetInstance(); // Panggil fungsi pembuatan instance hewan peliharaan
-        }
+        // --- Inisialisasi Event Listener dan Animasi ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inisialisasi Pop-up
+            const checkUpdatesButton = document.getElementById('check-updates-button');
+            const updatePopupOverlay = document.getElementById('update-popup-overlay');
+            const popupCloseButton = document.getElementById('popup-close-button');
 
-        // Mulai loop animasi utama setelah semua pets dibuat
-        if (petsInstances.length > 0) {
-            requestAnimationFrame(animateAllPets);
-        }
+            if (checkUpdatesButton && updatePopupOverlay && popupCloseButton) {
+                checkUpdatesButton.addEventListener('click', () => {
+                    updatePopupOverlay.style.display = 'flex'; // Tampilkan pop-up
+                    console.log("Pop-up button clicked, display set to flex."); // Debugging log
+                });
 
-        // Sesuaikan posisi vertikal pets saat resize (X position will be reset in loop)
-        window.addEventListener('resize', () => {
-            petsInstances.forEach(pet => {
-                const petHeightCss = parseFloat(getComputedStyle(pet.element).height);
-                const petsContainerHeight = pixelPetsContainer.clientHeight;
-                pet.element.style.bottom = `${(petsContainerHeight - petHeightCss) / 2 + getRandom(-10, 10)}px`;
+                popupCloseButton.addEventListener('click', () => {
+                    updatePopupOverlay.style.display = 'none'; // Sembunyikan pop-up
+                    console.log("Close button clicked, display set to none."); // Debugging log
+                });
+
+                updatePopupOverlay.addEventListener('click', (event) => {
+                    if (event.target === updatePopupOverlay) {
+                        updatePopupOverlay.style.display = 'none';
+                        console.log("Overlay clicked (outside content), display set to none."); // Debugging log
+                    }
+                });
+                console.log("Pop-up event listeners attached."); // Debugging log
+            } else {
+                console.error("ERROR: One or more pop-up elements not found."); // Debugging error
+                if (!checkUpdatesButton) console.error("checkUpdatesButton not found.");
+                if (!updatePopupOverlay) console.error("updatePopupOverlay not found.");
+                if (!popupCloseButton) console.error("popupCloseButton not found.");
+            }
+
+            // Inisialisasi Countdown Timer
+            if (countdownElement) {
+                updateCountdown();
+            }
+
+            // Inisialisasi Partikel
+            for (let i = 0; i < numParticles; i++) {
+                createAndAnimateParticle(); // Panggil fungsi pembuatan instance partikel
+            }
+
+            // Inisialisasi Pixel Pets
+            for (let i = 0; i < numPets; i++) {
+                createAndAnimatePetInstance(); // Panggil fungsi pembuatan instance hewan peliharaan
+            }
+
+            // Mulai loop animasi utama setelah semua pets dibuat
+            if (petsInstances.length > 0) {
+                requestAnimationFrame(animateAllPets);
+            }
+
+            // Sesuaikan posisi vertikal pets saat resize
+            window.addEventListener('resize', () => {
+                petsInstances.forEach(pet => {
+                    const petHeightCss = parseFloat(getComputedStyle(pet.element).height);
+                    const petsContainerHeight = pixelPetsContainer.clientHeight;
+                    pet.element.style.bottom = `${(petsContainerHeight - petHeightCss) / 2 + getRandom(-10, 10)}px`;
+                });
             });
-        });
+        }); /* Penutup DOMContentLoaded */
+
+        // --- Fungsi getRandom (Pindahkan ke luar DOMContentLoaded jika digunakan di luar) ---
+        // Karena getRandom digunakan oleh partikel dan pets yang diinisialisasi dalam DOMContentLoaded,
+        // lebih baik definisikan getRandom di luar atau di scope yang bisa diakses keduanya.
+        // Ini adalah fungsi helper untuk getRandom
+        function getRandom(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
     </script>
 </body>
 </html>

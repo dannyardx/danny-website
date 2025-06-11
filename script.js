@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
     const heroSection = document.getElementById('hero-after-header');
     const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
-    const sidebarToggleDesktop = document.getElementById('sidebar-toggle-desktop'); // Dapatkan referensi tombol desktop baru
+    const sidebarToggleDesktop = document.getElementById('sidebar-toggle-desktop');
 
     // --- Smooth Scrolling (untuk nav links) ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -98,40 +98,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typingTextElement) {
         const words = JSON.parse(typingTextElement.getAttribute('data-words'));
         let wordIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        const typingSpeed = 100;
-        const deletingSpeed = 50;
-        const delayBeforeDeleting = 1500;
-        const delayBeforeTyping = 750;
+        const delayBeforeNextWord = 2000;
 
-        function type() {
-            const currentWord = words[wordIndex];
+        function displayNextWord() {
+            typingTextElement.textContent = words[wordIndex];
             
-            if (isDeleting) {
-                typingTextElement.textContent = currentWord.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                typingTextElement.textContent = currentWord.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            let timeoutDelay = typingSpeed;
-
-            if (!isDeleting && charIndex === currentWord.length) {
-                isDeleting = true;
-                timeoutDelay = delayBeforeDeleting;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                wordIndex = (wordIndex + 1) % words.length;
-                timeoutDelay = delayBeforeTyping;
-            } else {
-                timeoutDelay = isDeleting ? deletingSpeed : typingSpeed;
-            }
-
-            setTimeout(type, timeoutDelay);
+            wordIndex = (wordIndex + 1) % words.length;
+            setTimeout(() => {
+                displayNextWord();
+            }, delayBeforeNextWord);
         }
-        type();
+        displayNextWord();
     }
 
     // --- Dynamic Portfolio Projects ---
@@ -197,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Mobile Sidebar Toggle & Overlay Logic ---
     if (mobileSidebarToggle && sidebarNav && mainPageContent && sidebarOverlay) {
         mobileSidebarToggle.addEventListener('click', () => {
-            // Hanya aktifkan sidebar mobile di tampilan mobile
             if (window.innerWidth <= 991) {
                 sidebarNav.classList.toggle('is-open');
                 mainPageContent.classList.toggle('dim-content');
@@ -230,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleMobileToggleVisibility = () => {
         if (!mobileSidebarToggle) return;
 
-        if (window.innerWidth <= 991) { // Logika ini hanya berlaku untuk mobile
+        if (window.innerWidth <= 991) {
             const currentScrollY = window.scrollY || document.documentElement.scrollTop;
 
             if (currentScrollY < showThreshold) {
@@ -244,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 mobileSidebarToggle.classList.remove('hidden-on-scroll');
             }
         } else {
-            // Di desktop: mobileSidebarToggle selalu display: none (di CSS)
             mobileSidebarToggle.classList.remove('faded-on-hero');
             mobileSidebarToggle.classList.remove('hidden-on-scroll');
         }
@@ -252,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', handleMobileToggleVisibility);
     window.addEventListener('resize', handleMobileToggleVisibility); 
-    handleMobileToggleVisibility(); // Panggil sekali saat load
+    handleMobileToggleVisibility();
 
     // --- Logika Tombol Scroll-to-Top ---
     if (scrollToTopBtn) {
@@ -296,42 +271,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sidebarToggleDesktop) {
         sidebarToggleDesktop.addEventListener('click', () => {
             const mainLayout = document.querySelector('.main-layout');
-            // Pastikan operasi hanya di desktop
             if (window.innerWidth > 991 && mainLayout && sidebarNav) {
-                const isSidebarHidden = mainLayout.classList.toggle('sidebar-hidden-desktop'); // Toggle kelas di main-layout
-                sidebarNav.classList.toggle('hidden-desktop'); // Toggle kelas di sidebar-nav
-                sidebarToggleDesktop.classList.toggle('sidebar-toggled'); // Toggle kelas di tombol untuk rotasi ikon
+                const isSidebarHidden = mainLayout.classList.toggle('sidebar-hidden-desktop');
+                sidebarNav.classList.toggle('hidden-desktop');
+                sidebarToggleDesktop.classList.toggle('sidebar-toggled');
                 
-                // Menyesuaikan posisi 'right' tombol toggle
                 if (isSidebarHidden) {
-                    // Sidebar tersembunyi: tombol di ujung kanan viewport (0px dari kanan)
-                    sidebarToggleDesktop.style.right = '0px'; /* BARU: Posisi di ujung kanan */
+                    sidebarToggleDesktop.style.right = '0px'; 
                 } else {
-                    // Sidebar terlihat: tombol di samping sidebar (280px dari kanan)
                     sidebarToggleDesktop.style.right = '280px';
                 }
             }
         });
 
-        // Panggil saat load dan resize untuk memastikan posisi tombol sudah benar
         const adjustDesktopTogglePosition = () => {
             const mainLayout = document.querySelector('.main-layout');
             if (window.innerWidth > 991 && mainLayout && sidebarNav) {
                 if (mainLayout.classList.contains('sidebar-hidden-desktop')) {
-                    sidebarToggleDesktop.style.right = '0px'; /* BARU: Di ujung kanan viewport */
+                    sidebarToggleDesktop.style.right = '0px'; 
                     sidebarToggleDesktop.classList.add('sidebar-toggled');
                 } else {
                     sidebarToggleDesktop.style.right = '280px';
                     sidebarToggleDesktop.classList.remove('sidebar-toggled');
                 }
-                sidebarToggleDesktop.style.display = 'flex'; // Pastikan terlihat di desktop
+                sidebarToggleDesktop.style.display = 'flex';
             } else if (sidebarToggleDesktop) {
-                sidebarToggleDesktop.style.display = 'none'; // Sembunyikan di mobile
+                sidebarToggleDesktop.style.display = 'none';
             }
         };
 
         window.addEventListener('resize', adjustDesktopTogglePosition);
-        adjustDesktopTogglePosition(); // Panggil sekali saat load
+        adjustDesktopTogglePosition();
     } else {
         console.error("Desktop sidebar toggle button not found.");
     }

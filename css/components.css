@@ -53,7 +53,7 @@ body.dark-mode .theme-toggle .icon-dark {
 
 /* Gaya untuk kursor berkedip */
 .blinking-cursor {
-    color: var(--accent-color); /* Warna kursor */
+    color: var(--h1-color-light); /* Warna kursor */
     animation: blink 0.7s infinite; /* Animasi berkedip */
     margin-left: 0.1rem; /* Sedikit jarak dari teks */
     font-weight: 300; /* Konsisten dengan p normal */

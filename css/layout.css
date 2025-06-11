@@ -195,9 +195,11 @@ body.dark-mode .theme-toggle .icon-dark { display: inline-block; }
     font-size: 3.5rem;
     margin-bottom: 0.9375rem;
     letter-spacing: 0.0625rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: clip;
+    /* MEMPERTAHANKAN white-space: nowrap; */
+    white-space: nowrap; 
+    /* MENGHAPUS overflow: hidden; dan text-overflow: clip; */
+    /* overflow: hidden; */ 
+    /* text-overflow: clip; */ 
     color: var(--h1-color-light);
     text-shadow:
         0 0 0.5rem var(--h1-glow-color-light),
@@ -272,7 +274,7 @@ body.dark-mode .hero-after-header h1 {
         grid-template-columns: 1fr 280px;
         height: 100vh;
     }
-    /* Tombol titik tiga mobile-toggle-button akan disembunyikan di desktop */
+    /* Tombol titik tiga mobile-sidebar-toggle akan disembunyikan di desktop */
     .mobile-sidebar-toggle {
         display: none; 
     } 
@@ -280,7 +282,7 @@ body.dark-mode .hero-after-header h1 {
     .sidebar-nav {
         transform: translateX(0); /* Pastikan terlihat */
         position: relative;
-        /* width: auto; // Ini sudah ada, tidak perlu diubah */
+        width: auto; /* Biarkan auto untuk grid */
         box-shadow: -5px 0 15px rgba(0,0,0,0.2);
         justify-content: space-between;
         transition: transform 0.3s ease-out; /* Transisi untuk geser sidebar */
@@ -289,8 +291,6 @@ body.dark-mode .hero-after-header h1 {
     /* BARU: MENGELOLA POSISI SIDEBAR SAAT DISEMBUNYIKAN DI DESKTOP */
     .sidebar-nav.hidden-desktop {
         transform: translateX(100%); /* Geser sidebar ke kanan keluar layar */
-        /* Hapus properti width, overflow, padding, box-shadow dari sini */
-        /* Karena grid akan mengaturnya ke 0px dan transform menangani pergeseran visual */
     }
 }
 

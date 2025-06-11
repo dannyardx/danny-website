@@ -2,11 +2,12 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>Maintenance Developing</title>
     <style>
         /* Import Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
         /* Font Awesome (opsional, jika Anda ingin menambahkan ikon di masa mendatang) */
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
 
@@ -18,6 +19,10 @@
             
             /* Warna ungu untuk teks utama */
             --glow-color-base: #A169EF; /* Warna dasar ungu yang lebih cerah dan mirip gambar */
+            --accent-color: #00FF00; /* Ini sebelumnya untuk prompt console */
+
+            --progress-bar-bg-color: #333333; /* Warna latar belakang progress bar */
+            --progress-bar-fill-gradient: linear-gradient(to right, var(--blue-color), var(--glow-color-base)); /* Gradient fill */
         }
 
         body {
@@ -73,6 +78,7 @@
                 radial-gradient(10px 10px at 15% 25%, white, rgba(255,255,255,0)), /* Bintang besar */
                 radial-gradient(8px 8px at 45% 75%, white, rgba(255,255,255,0)),
                 radial-gradient(12px 12px at 80% 10%, white, rgba(255,255,255,0)),
+                radial-gradient(7px 7px at 20% 90%, white, rgba(255,255,255,0)),
                 
                 /* Partikel Ungu */
                 radial-gradient(10px 10px at 30% 60%, var(--glow-color-base), rgba(161,105,239,0)),
@@ -123,7 +129,6 @@
             justify-content: center;
             max-width: 750px; /* Lebar maksimum konten */
             width: 100%; /* Penting untuk responsivitas */
-            /* --- Perbaikan Padding & Width --- */
             padding: clamp(1rem, 5vw, 3rem) clamp(1rem, 5vw, 2.5rem); /* Responsive padding min 1rem, max 3/2.5rem */
             box-sizing: border-box; /* Padding termasuk dalam lebar/tinggi elemen */
             position: relative; /* Penting agar main-content berada di atas partikel */
@@ -132,7 +137,6 @@
 
         .status-header {
             font-family: 'Montserrat', sans-serif; /* Font untuk judul status */
-            /* --- Perbaikan Font Size Responsif --- */
             font-size: clamp(2.2rem, 8vw, 3.8rem); /* Ukuran font responsif */
             color: var(--glow-color-base); /* Warna teks utama jadi ungu */
             margin-bottom: 1.5rem; /* Jarak bawah agar lebih dekat dengan paragraf */
@@ -142,7 +146,6 @@
         }
 
         p {
-            /* --- Perbaikan Font Size Responsif --- */
             font-size: clamp(0.9rem, 3vw, 1.1rem); /* Ukuran font responsif */
             color: var(--text-secondary); /* Warna teks paragraf dari variabel */
             line-height: 1.8;
@@ -153,13 +156,139 @@
 
         .countdown-timer {
             font-family: 'Montserrat', sans-serif; /* Font untuk timer */
-            /* --- Perbaikan Font Size Responsif --- */
             font-size: clamp(1.5rem, 5vw, 2rem); /* Ukuran font responsif */
             color: var(--blue-color); /* Warna biru dari variabel */
             margin-top: 1rem;
             margin-bottom: 1.5rem; /* Mengurangi jarak bawah timer */
             font-weight: 700;
         }
+
+        /* --- Progress Bar --- */
+        .progress-bar-container {
+            width: 80%; /* Lebar container progress bar */
+            max-width: 400px;
+            height: 20px; /* Tinggi progress bar */
+            background-color: var(--progress-bar-bg-color); /* Menggunakan variabel warna */
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2rem; /* Jarak dari elemen di atasnya */
+            margin-bottom: 0.5rem; /* Jarak dari progress text label */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); /* Efek cekung */
+        }
+
+        .progress-bar-fill {
+            width: 0%; /* Dimulai dari 0 */
+            height: 100%;
+            background: var(--progress-bar-fill-gradient); /* Gradient fill */
+            border-radius: 10px;
+            animation: fillProgressBar 3s ease-out forwards; /* Animasi isi progress bar */
+            box-shadow: 0 0 5px rgba(255,255,255,0.3); /* Sedikit glow pada fill */
+        }
+
+        @keyframes fillProgressBar {
+            from { width: 0%; }
+            to { width: 75%; } /* Sesuaikan persentase di sini */
+        }
+        
+        .progress-text-label {
+            font-family: 'Fira Code', monospace;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem; /* Jarak dari tombol/link update */
+            text-align: center; /* Pastikan teks rata tengah */
+        }
+
+        /* --- Tombol/Link Cek Update --- */
+        .check-updates-button {
+            background-color: var(--glow-color-base); /* Warna tombol ungu */
+            color: var(--text-primary);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-family: 'Roboto', sans-serif;
+            font-size: clamp(0.9rem, 3vw, 1rem); /* Ukuran font responsif */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 1rem; /* Jarak dari progress text label */
+            margin-bottom: 2rem; /* Jarak dari pets container */
+        }
+        .check-updates-button:hover {
+            background-color: var(--blue-color); /* Ubah warna saat hover */
+            transform: translateY(-2px);
+        }
+
+        /* --- Update Pop-up --- */
+        #update-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); /* Latar belakang gelap transparan */
+            display: none; /* Awalnya tersembunyi */
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Pastikan di atas semua elemen lain */
+            backdrop-filter: blur(5px); /* Efek blur pada background di belakang pop-up */
+            -webkit-backdrop-filter: blur(5px); /* Kompatibilitas Safari */
+        }
+
+        #update-popup-content {
+            background-color: var(--bg-color); /* Background pop-up */
+            padding: 2.5rem;
+            border-radius: 10px;
+            max-width: 90%; /* Lebar responsif */
+            width: 600px; /* Lebar default desktop */
+            max-height: 80vh; /* Tinggi responsif */
+            overflow-y: auto; /* Bisa discroll jika konten panjang */
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7); /* Shadow pop-up */
+            border: 1px solid var(--text-secondary);
+            color: var(--text-primary);
+            text-align: left; /* Teks di dalam pop-up rata kiri */
+            box-sizing: border-box;
+        }
+        #update-popup-content h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 2rem);
+            color: var(--glow-color-base);
+            margin-top: 0;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        #update-popup-content h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: var(--blue-color);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        #update-popup-content ul {
+            list-style: disc inside;
+            padding-left: 0;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        #update-popup-content li {
+            margin-bottom: 0.3rem;
+            font-size: clamp(0.9rem, 2.5vw, 0.95rem);
+        }
+
+        #popup-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        #popup-close-button:hover {
+            color: var(--text-primary);
+        }
+
 
         /* --- Footer Minimalis --- */
         footer {
@@ -172,13 +301,46 @@
             box-sizing: border-box; /* Penting untuk footer */
         }
 
+        /* --- Pixel Pets di Bagian Bawah --- */
+        .pixel-pets-container { /* Ganti nama kelas menjadi lebih spesifik */
+            position: fixed; /* Menempel di viewport */
+            bottom: 0;
+            left: 0;
+            width: 100vw; /* Lebar penuh viewport */
+            height: clamp(50px, 10vh, 100px); /* Tinggi area untuk hewan peliharaan, responsif */
+            z-index: 10; /* Lebih tinggi dari konten utama dan footer */
+            pointer-events: none; /* Agar tidak menghalangi klik pada elemen lain */
+            display: flex; /* Gunakan flexbox untuk menata */
+            justify-content: space-around; /* Menyebar hewan peliharaan */
+            align-items: flex-end; /* Memposisikan di bagian bawah area */
+            padding: 0 10%; /* Padding horizontal agar tidak terlalu di pinggir */
+            box-sizing: border-box;
+            overflow: hidden; /* Sembunyikan jika ada yang meluber */
+            background-color: rgba(0,0,0,0.2); /* Contoh: sedikit gelap */
+        }
+        .pixel-pet-img { /* Ganti nama kelas untuk gambar */
+            height: clamp(30px, 6vw, 60px); /* Ukuran gambar hewan peliharaan */
+            width: auto; /* Jaga rasio aspek */
+            image-rendering: pixelated; /* Penting untuk menjaga efek piksel */
+            position: absolute; /* Untuk gerakan independen */
+            bottom: 0; /* Mulai dari bawah container */
+            transform-origin: center bottom; /* Titik pivot untuk scaling/flipping */
+            will-change: transform; /* Untuk performa animasi */
+            /* Animasi akan diatur oleh JS */
+        }
+        /* Keyframes untuk gerakan horizontal pet dan float akan dibuat dinamis oleh JS */
+
 
         /* --- Media Queries (Hanya penyesuaian sangat spesifik jika clamp() tidak cukup) --- */
         @media (max-width: 768px) {
-            /* Tidak ada perubahan spesifik yang besar jika clamp() bekerja baik */
+            .status-header { font-size: 3rem; }
+            p { font-size: 1rem; }
+            .countdown-timer { font-size: 1.5rem; }
         }
         @media (max-width: 480px) {
-            /* Tidak ada perubahan spesifik yang besar jika clamp() bekerja baik */
+            .status-header { font-size: 2.2rem; letter-spacing: 0.05em; }
+            p { font-size: 0.9rem; }
+            .countdown-timer { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -189,11 +351,49 @@
         <h1 class="status-header">MAINTENANCE</h1>
         <p>Situs ini masih dalam tahap developing</p>
         <div class="countdown-timer" id="countdown">Loading...</div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill"></div>
+        </div>
+        <p class="progress-text-label">Membuat progres penghijraan webnya... (75%)</p>
+
+        <button id="check-updates-button" class="check-updates-button">Cek Update Webnya</button>
     </div>
+
+    <div class="pixel-pets-container" id="pixel-pets-container">
+        </div>
 
     <footer>
         &copy; 2025 by Danny. All Rights Reserved.
     </footer>
+
+    <div id="update-popup-overlay">
+        <div id="update-popup-content">
+            <h2>Update Log</h2>
+            <button id="popup-close-button"><i class="fas fa-times"></i></button>
+            <div id="update-log">
+                <h3>Versi 1.1.0 (2025-07-10)</h3>
+                <ul>
+                    <li>Menambahkan animasi partikel latar belakang.</li>
+                    <li>Mengoptimalkan responsivitas untuk perangkat seluler.</li>
+                    <li>Memperbaiki bug tampilan footer.</li>
+                </ul>
+                <h3>Versi 1.0.0 (2025-07-01)</h3>
+                <ul>
+                    <li>Peluncuran halaman maintenance awal.</li>
+                    <li>Fitur countdown timer.</li>
+                    <li>Pencegahan klik kanan dan inspect element.</li>
+                </ul>
+                <h3>Versi 1.2.0 (2025-07-15)</h3>
+                <ul>
+                    <li>Menambahkan progress bar.</li>
+                    <li>Menambahkan animasi pixel pets di bagian bawah.</li>
+                    <li>Optimasi performa animasi.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         // Mencegah klik kanan
@@ -211,7 +411,7 @@
         const countdownElement = document.getElementById('countdown');
 
         // Set target date/time for maintenance completion
-        // Ganti dengan tanggal dan waktu target Anda. Contoh: 12 Juni 2025, jam 08:00:00 AM (WIB)
+        // Ganti dengan tanggal dan waktu target Anda. Contoh: 12 Juli 2025, jam 08:00:00 AM (WIB)
         // Format: 'Month Day, Year HH:MM:SS GMT+0700'
         // Anda perlu menyesuaikan GMT+0700 jika zona waktu Anda berbeda.
         const targetDate = new Date('July 17, 2025 08:00:00 GMT+0700').getTime();
@@ -241,6 +441,139 @@
         if (countdownElement) {
             updateCountdown();
         }
+
+        // --- JavaScript untuk Menghasilkan dan Menganimasikan Pixel Pets ---
+        const pixelPetsContainer = document.getElementById('pixel-pets-container');
+
+        // DEFINISI DATA HEWAN PELIHARAAN
+        // PENTING: Ganti URL gambar dengan gambar PIKSEL hewan peliharaan Anda sendiri
+        // Yang ideal adalah gambar statis piksel (bukan GIF animasi atau sprite sheet untuk berjalan)
+        // Jika Anda ingin animasi berjalan (frame-by-frame), itu jauh lebih kompleks dan memerlukan sprite sheet.
+        const petData = [
+            {
+                src: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/52.png', // Contoh: Kucing (gambar statis)
+                width: 32, // Lebar display (sesuaikan jika gambar Anda berbeda)
+                height: 32, // Tinggi display
+                baseSpeed: 0.05 // Kecepatan dasar pergerakan horizontal (px/ms)
+            },
+            {
+                src: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/25.png', // Contoh: Anjing (gambar statis)
+                width: 32,
+                height: 32,
+                baseSpeed: 0.04
+            },
+            {
+                src: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/19.png', // Contoh: Tikus (gambar statis)
+                width: 24,
+                height: 24,
+                baseSpeed: 0.06
+            },
+            {
+                src: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/28.png', // Contoh: Pokémon lain
+                width: 48,
+                height: 48,
+                baseSpeed: 0.03
+            },
+             {
+                src: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/16.png', // Contoh: Burung
+                width: 32,
+                height: 32,
+                baseSpeed: 0.07
+            }
+            // Tambahkan jenis hewan peliharaan lain di sini
+        ];
+
+        const numPets = 10; // Jumlah total hewan peliharaan yang ingin muncul (sesuaikan)
+        const petsInstances = []; // Array untuk menyimpan referensi dan state hewan peliharaan
+
+        // Fungsi pembantu untuk menghasilkan angka acak dalam rentang
+        function getRandom(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // Fungsi untuk membuat dan menggerakkan setiap hewan peliharaan
+        function createAndAnimatePet() {
+            if (petData.length === 0) return; 
+
+            const petType = petData[Math.floor(Math.random() * petData.length)];
+            const img = document.createElement('img');
+            img.src = petType.src;
+            img.alt = 'Pixel Pet';
+            img.classList.add('pixel-pet-img');
+            img.style.width = `${petType.width}px`;
+            img.style.height = `${petType.height}px`;
+
+            // State internal pet
+            let currentX = getRandom(0, window.innerWidth - petType.width); // Posisi awal acak
+            let currentDirection = Math.random() > 0.5 ? 1 : -1; // 1 for right, -1 for left
+            let currentSpeed = petType.baseSpeed * (0.8 + Math.random() * 0.4); 
+
+            img.style.left = `${currentX}px`;
+            img.style.transform = `scaleX(${currentDirection})`;
+
+            const petsContainerRect = pixelPetsContainer.getBoundingClientRect();
+            img.style.bottom = `${(petsContainerRect.height - petType.height) / 2 + (Math.random() * 20 - 10)}px`;
+
+            pixelPetsContainer.appendChild(img);
+            // Simpan state pet ke dalam array petsInstances
+            petsInstances.push({ 
+                element: img, 
+                currentX, 
+                currentDirection, 
+                currentSpeed, 
+                petWidth: petType.width, 
+                lastFrameTime: performance.now() 
+            });
+        }
+
+        // Loop Animasi Utama (untuk semua hewan peliharaan)
+        let animationFrameId; // Variabel untuk menyimpan ID requestAnimationFrame
+
+        function animateAllPets(currentTime) {
+            petsInstances.forEach(pet => {
+                const deltaTime = currentTime - pet.lastFrameTime;
+                pet.lastFrameTime = currentTime; 
+
+                // Update posisi horizontal
+                pet.currentX += pet.currentDirection * pet.currentSpeed * deltaTime;
+
+                // Boundary check dan direction change (wrap around screen)
+                if (pet.currentX < -pet.petWidth && pet.currentDirection === -1) { // Exit left
+                    pet.currentX = window.innerWidth; // Re-enter from right
+                } else if (pet.currentX > window.innerWidth && pet.currentDirection === 1) { // Exit right
+                    pet.currentX = -pet.petWidth; // Re-enter from left
+                }
+                
+                // Randomly change direction (kurang sering)
+                if (Math.random() < (0.0005 * (deltaTime / 16.66))) { 
+                    pet.currentDirection *= -1;
+                    pet.element.style.transform = `scaleX(${pet.currentDirection})`; // Apply direction flip
+                }
+
+                pet.element.style.left = `${pet.currentX}px`;
+            });
+
+            animationFrameId = requestAnimationFrame(animateAllPets); // Panggil diri sendiri untuk frame berikutnya
+        }
+
+        // Buat sejumlah hewan peliharaan
+        for (let i = 0; i < numPets; i++) {
+            createAndAnimatePet();
+        }
+
+        // Mulai loop animasi utama setelah semua pets dibuat
+        if (petsInstances.length > 0) {
+            requestAnimationFrame(animateAllPets);
+        }
+
+        // Sesuaikan posisi vertikal pets saat resize (X position will be reset in loop)
+        window.addEventListener('resize', () => {
+            petsInstances.forEach(pet => {
+                const petHeightCss = parseFloat(getComputedStyle(pet.element).height);
+                const petsContainerHeight = pixelPetsContainer.clientHeight;
+                pet.element.style.bottom = `${(petsContainerHeight - petHeightCss) / 2 + getRandom(-10, 10)}px`;
+            });
+        });
     </script>
 </body>
 </html>

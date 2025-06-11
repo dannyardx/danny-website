@@ -145,7 +145,9 @@
 
     <div class="main-content">
         <h1 class="status-header">MAINTENANCE</h1>
+        <p>Situs pribadi masih dalam tahap developing</p>
         <div class="countdown-timer" id="countdown">Loading...</div>
+        <p>by danny</p>
     </div>
 
     <footer>
@@ -168,10 +170,8 @@
         const countdownElement = document.getElementById('countdown');
 
         // Set target date/time for maintenance completion
-        // Ganti dengan tanggal dan waktu target Anda. Contoh: 12 Juni 2025, jam 08:00:00 AM (WIB)
-        // Format: 'Month Day, Year HH:MM:SS GMT+0700'
-        // Anda perlu menyesuaikan GMT+0700 jika zona waktu Anda berbeda.
-        const targetDate = new Date('June 12, 2025 08:00:00 GMT+0700').getTime();
+        // >>> PERUBAHAN DI SINI: Tanggal target diubah menjadi 20 Juni 2025 <<<
+        const targetDate = new Date('June 20, 2025 08:00:00 GMT+0700').getTime(); 
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -202,11 +202,11 @@
         // --- JavaScript untuk Menghasilkan dan Menganimasikan Partikel ---
         const particleContainer = document.querySelector('.particle-background');
         const numParticles = 25; // Jumlah partikel yang ingin dibuat (sesuaikan)
-        const minSize = 32; // Ukuran minimal partikel (px) - Diubah menjadi 16
-        const maxSize = 64; // Ukuran maksimal partikel (px) - Diubah menjadi 32
+        const minSize = 32; // Ukuran minimal partikel (px) - Diubah menjadi 32
+        const maxSize = 64; // Ukuran maksimal partikel (px) - Diubah menjadi 64
         const minMoveDuration = 20; // Durasi animasi gerakan minimal (detik)
         const maxMoveDuration = 60; // Durasi animasi gerakan maksimal (detik)
-        const twinkleDuration = 10; // Durasi kelap-kelip (detik) - Diubah menjadi 5
+        const twinkleDuration = 10; // Durasi kelap-kelip (detik) - Diubah menjadi 10
 
         // Ambil warna ungu dari CSS variable
         const purpleColor = getComputedStyle(document.documentElement).getPropertyValue('--glow-color-base');

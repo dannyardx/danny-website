@@ -23,6 +23,10 @@
 
             --progress-bar-bg-color: #333333; /* Warna latar belakang progress bar */
             --progress-bar-fill-gradient: linear-gradient(to right, var(--blue-color), var(--glow-color-base)); /* Gradient fill */
+
+            /* Variabel untuk partikel JS */
+            --particle-white-color: white;
+            --particle-purple-color: var(--glow-color-base);
         }
 
         body {
@@ -49,7 +53,7 @@
             box-sizing: border-box; /* Pastikan padding di elemen lain tidak menyebabkan overflow */
         }
 
-        /* --- Animasi Partikel di Latar Belakang (Pure CSS - Optimalisasi Lag) --- */
+        /* --- Kontainer Partikel --- */
         .particle-background {
             position: fixed; /* Menempel pada viewport */
             top: 0;
@@ -59,65 +63,28 @@
             pointer-events: none; /* Memungkinkan interaksi dengan elemen di bawahnya */
             z-index: 0; /* Pastikan di belakang konten utama */
             background: transparent; /* Pastikan latar belakangnya transparan */
+            /* DEBUG: border: 1px solid red; */ /* Tambahkan ini untuk melihat batas kontainer partikel */
         }
 
-        /* Pseudo-element untuk layer bintang pertama */
-        .particle-background::before,
-        .particle-background::after {
-            content: '';
+        /* --- Gaya untuk Partikel Individu (Dibuat oleh JS) --- */
+        .star-particle {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background-color: transparent; /* Latar belakang untuk bintang */
-            
-            /* ---- Metode Bintang yang Lebih Efisien (Menggunakan Background-Image) ---- */
-            /* Partikel ini akan jauh lebih besar dan lebih jarang untuk menghindari zoom */
-            background-image: 
-                radial-gradient(10px 10px at 15% 25%, white, rgba(255,255,255,0)), /* Bintang besar */
-                radial-gradient(8px 8px at 45% 75%, white, rgba(255,255,255,0)),
-                radial-gradient(12px 12px at 80% 10%, white, rgba(255,255,255,0)),
-                radial-gradient(7px 7px at 20% 90%, white, rgba(255,255,255,0)),
-                
-                /* Partikel Ungu */
-                radial-gradient(10px 10px at 30% 60%, var(--glow-color-base), rgba(161,105,239,0)),
-                radial-gradient(8px 8px at 70% 40%, var(--glow-color-base), rgba(161,105,239,0))
-            ; 
-            background-size: 2000px 2000px; /* Ukuran "tile" yang sangat besar (px untuk performa lebih baik) */
-            background-repeat: repeat; /* Mengulang tile */
-            opacity: 0.05; /* Opacity dasar bintang, sangat sangat redup */
-            animation: 
-                starMove 360s linear infinite, /* Pergerakan bintang sangat lambat */
-                starTwinkle 5s ease-in-out infinite alternate; /* Kelap-kelip */
+            background-color: white; /* Warna dasar, akan di-override oleh JS */
+            border-radius: 50%; /* Bentuk lingkaran */
+            opacity: 0; /* Awalnya tidak terlihat */
+            will-change: transform, opacity; /* Untuk performa animasi */
         }
 
-        /* Layer bintang kedua (lebih besar, lebih sedikit, lebih lambat) */
-        .particle-background::after {
-            background-image: 
-                radial-gradient(12px 12px at 10% 80%, rgba(255,255,255,0.6), rgba(255,255,255,0)), 
-                radial-gradient(10px 10px at 90% 20%, rgba(255,255,255,0.6), rgba(255,255,255,0)),
-                radial-gradient(15px 15px at 50% 50%, rgba(161,105,239,0.6), rgba(161,105,239,0))
-            ;
-            background-size: 3000px 3000px; /* Ukuran tile lebih besar lagi (px untuk performa) */
-            animation-delay: 1s; /* Delay sedikit agar tidak sama dengan layer pertama */
-            animation-duration: 540s; /* Kecepatan lebih lambat lagi */
-            opacity: 0.03; /* Lebih redup lagi */
-            animation: 
-                starMove 540s linear infinite, 
-                starTwinkle 8s ease-in-out infinite alternate;
+        /* Keyframes untuk kelap-kelip (twinkle) */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(1); } /* Transparan saat redup */
+            50% { opacity: var(--star-opacity, 0.7); transform: scale(1.1); } /* Terang saat berkedip, sedikit membesar */
         }
-
-        /* Animasi pergerakan bintang */
-        @keyframes starMove {
-            from { background-position: 0 0; }
-            to { background-position: 100% 100%; } /* Gerak diagonal */
-        }
-
-        /* Animasi kelap-kelip bintang */
-        @keyframes starTwinkle {
-            0%, 100% { opacity: 0.05; } /* Sangat redup di titik teredup */
-            50% { opacity: 0.2; } /* Tidak terlalu terang di titik paling terang (lebih redup dari sebelumnya) */
+        
+        /* Keyframes untuk gerakan partikel */
+        @keyframes moveStar {
+            from { transform: translate(0, 0); }
+            to { transform: translate(var(--star-dx), var(--star-dy)); } /* Bergerak ke offset acak */
         }
 
 
@@ -200,21 +167,22 @@
 
         /* --- Tombol/Link Cek Update --- */
         .check-updates-button {
-            background-color: var(--glow-color-base); /* Warna tombol ungu */
-            color: var(--text-primary);
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 5px;
+            background-color: transparent; /* Hapus background */
+            border: none; /* Hapus border */
+            padding: 0.8rem 1.5rem; /* Pertahankan padding untuk area klik */
+            border-radius: 5px; /* Tetap membulat */
             font-family: 'Roboto', sans-serif;
             font-size: clamp(0.9rem, 3vw, 1rem); /* Ukuran font responsif */
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: color 0.3s ease, transform 0.2s ease; /* Transisi untuk warna teks */
             margin-top: 1rem; /* Jarak dari progress text label */
             margin-bottom: 2rem; /* Jarak dari pets container */
+            color: var(--glow-color-base); /* Warna teks tombol ungu */
         }
         .check-updates-button:hover {
-            background-color: var(--blue-color); /* Ubah warna saat hover */
+            background-color: transparent; /* Pastikan tetap transparan saat hover */
             transform: translateY(-2px);
+            color: var(--blue-color); /* Ubah warna teks saat hover */
         }
 
         /* --- Update Pop-up --- */
@@ -310,13 +278,7 @@
             height: clamp(50px, 10vh, 100px); /* Tinggi area untuk hewan peliharaan, responsif */
             z-index: 10; /* Lebih tinggi dari konten utama dan footer */
             pointer-events: none; /* Agar tidak menghalangi klik pada elemen lain */
-            display: flex; /* Gunakan flexbox untuk menata */
-            justify-content: space-around; /* Menyebar hewan peliharaan */
-            align-items: flex-end; /* Memposisikan di bagian bawah area */
-            padding: 0 10%; /* Padding horizontal agar tidak terlalu di pinggir */
-            box-sizing: border-box;
-            overflow: hidden; /* Sembunyikan jika ada yang meluber */
-            background-color: rgba(0,0,0,0.2); /* Contoh: sedikit gelap */
+            /* DEBUG: border: 1px solid green; */ /* Tambahkan ini untuk melihat batas kontainer pets */
         }
         .pixel-pet-img { /* Ganti nama kelas untuk gambar */
             height: clamp(30px, 6vw, 60px); /* Ukuran gambar hewan peliharaan */
@@ -326,7 +288,7 @@
             bottom: 0; /* Mulai dari bawah container */
             transform-origin: center bottom; /* Titik pivot untuk scaling/flipping */
             will-change: transform; /* Untuk performa animasi */
-            /* Animasi akan diatur oleh JS */
+            /* DEBUG: border: 1px solid blue; */ /* Tambahkan ini untuk melihat batas setiap pet */
         }
         /* Keyframes untuk gerakan horizontal pet dan float akan dibuat dinamis oleh JS */
 
@@ -355,7 +317,7 @@
         <div class="progress-bar-container">
             <div class="progress-bar-fill"></div>
         </div>
-        <p class="progress-text-label">Sedang progres Pengerjaan webnya... (10%)</p>
+        <p class="progress-text-label">Sedang Proses Pengerjaan webnya... (10%)</p>
 
         <button id="check-updates-button" class="check-updates-button">Cek Update Webnya</button>
     </div>
@@ -442,6 +404,59 @@
             updateCountdown();
         }
 
+        // --- JavaScript untuk Menghasilkan dan Menganimasikan Partikel ---
+        const particleContainer = document.querySelector('.particle-background');
+
+        // DEFINISI DATA PARTIKEL
+        const particleData = [
+            { color: 'white', sizeMin: 32, sizeMax: 64, opacityMin: 0.05, opacityMax: 0.2, moveRange: 100, durationMin: 10, durationMax: 30 },
+            { color: 'var(--glow-color-base)', sizeMin: 32, sizeMax: 64, opacityMin: 0.03, opacityMax: 0.15, moveRange: 150, durationMin: 20, durationMax: 40 }
+        ];
+        const numParticles = 50; // Jumlah total partikel (sesuaikan)
+
+        // Fungsi pembantu untuk menghasilkan angka acak dalam rentang
+        function getRandom(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // Fungsi untuk membuat dan menganimasikan satu partikel
+        function createAndAnimateParticle() {
+            const particleType = particleData[Math.floor(Math.random() * particleData.length)];
+            const particle = document.createElement('div');
+            particle.classList.add('star-particle');
+
+            const size = getRandom(particleType.sizeMin, particleType.sizeMax);
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.backgroundColor = particleType.color;
+
+            // Posisi acak di seluruh viewport
+            particle.style.top = `${getRandom(0, 100)}vh`;
+            particle.style.left = `${getRandom(0, 100)}vw`;
+
+            // Set custom properties untuk animasi
+            particle.style.setProperty('--star-opacity', getRandom(particleType.opacityMin, particleType.opacityMax));
+            particle.style.setProperty('--star-dx', getRandom(-particleType.moveRange, particleType.moveRange) + 'px');
+            particle.style.setProperty('--star-dy', getRandom(-particleType.moveRange, particleType.moveRange) + 'px');
+
+            const animationDuration = getRandom(particleType.durationMin, particleType.durationMax);
+            const animationDelay = getRandom(0, animationDuration);
+
+            // Terapkan animasi
+            particle.style.animation = `
+                twinkle ${getRandom(2, 5)}s linear infinite ${animationDelay}s alternate,
+                moveStar ${animationDuration}s linear infinite ${animationDelay}s alternate
+            `;
+
+            particleContainer.appendChild(particle);
+        }
+
+        // Buat sejumlah partikel
+        for (let i = 0; i < numParticles; i++) {
+            createAndAnimateParticle();
+        }
+
+
         // --- JavaScript untuk Menghasilkan dan Menganimasikan Pixel Pets ---
         const pixelPetsContainer = document.getElementById('pixel-pets-container');
 
@@ -483,16 +498,15 @@
             // Tambahkan jenis hewan peliharaan lain di sini
         ];
 
-        const numPets = 10; // Jumlah total hewan peliharaan yang ingin muncul (sesuaikan)
+        const numPets = 25; // Jumlah total hewan peliharaan yang ingin muncul (sesuaikan)
         const petsInstances = []; // Array untuk menyimpan referensi dan state hewan peliharaan
 
         // Fungsi pembantu untuk menghasilkan angka acak dalam rentang
-        function getRandom(min, max) {
-            return Math.random() * (max - min) + min;
-        }
+        // (Sudah ada di atas, tapi diduplikasi untuk kejelasan konteks)
+        // function getRandom(min, max) { return Math.random() * (max - min) + min; }
 
         // Fungsi untuk membuat dan menggerakkan setiap hewan peliharaan
-        function createAndAnimatePet() {
+        function createAndAnimatePetInstance() { // Ubah nama fungsi agar tidak ambigu
             if (petData.length === 0) return; 
 
             const petType = petData[Math.floor(Math.random() * petData.length)];
@@ -512,7 +526,7 @@
             img.style.transform = `scaleX(${currentDirection})`;
 
             const petsContainerRect = pixelPetsContainer.getBoundingClientRect();
-            img.style.bottom = `${(petsContainerRect.height - petType.height) / 2 + (Math.random() * 20 - 10)}px`;
+            img.style.bottom = `${(petsContainerRect.height - petType.height) / 2 + getRandom(-10, 10)}px`;
 
             pixelPetsContainer.appendChild(img);
             // Simpan state pet ke dalam array petsInstances
@@ -526,8 +540,8 @@
             });
         }
 
-        // Loop Animasi Utama (untuk semua hewan peliharaan)
-        let animationFrameId; // Variabel untuk menyimpan ID requestAnimationFrame
+        // Loop Animasi Utama untuk SEMUA hewan peliharaan
+        let globalAnimationFrameId; // Variabel untuk menyimpan ID requestAnimationFrame
 
         function animateAllPets(currentTime) {
             petsInstances.forEach(pet => {
@@ -553,12 +567,12 @@
                 pet.element.style.left = `${pet.currentX}px`;
             });
 
-            animationFrameId = requestAnimationFrame(animateAllPets); // Panggil diri sendiri untuk frame berikutnya
+            globalAnimationFrameId = requestAnimationFrame(animateAllPets); // Panggil diri sendiri untuk frame berikutnya
         }
 
         // Buat sejumlah hewan peliharaan
         for (let i = 0; i < numPets; i++) {
-            createAndAnimatePet();
+            createAndAnimatePetInstance(); // Panggil fungsi pembuatan instance hewan peliharaan
         }
 
         // Mulai loop animasi utama setelah semua pets dibuat

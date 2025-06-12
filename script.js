@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroSection = document.getElementById('hero-after-header');
     const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
     const sidebarToggleDesktop = document.getElementById('sidebar-toggle-desktop');
-    // const leftPanelToggle = document.getElementById('left-panel-toggle'); // HAPUS INI, diambil di dynamic-toggles-handler.js
 
     // --- Smooth Scrolling (untuk nav links) ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
